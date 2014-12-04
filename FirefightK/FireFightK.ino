@@ -12,6 +12,7 @@
 #include "WheelEncoders.h"
 #include "IMU.h"
 
+// Added a comment for no reason
 double angle = 0; 
 boolean turnRight = true;
 boolean flame = false;
