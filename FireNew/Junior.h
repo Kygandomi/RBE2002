@@ -27,6 +27,8 @@
 #define gasPin 
 #define K -.5 //constant for controlling left and rigth motors to go at the same speed
 
+// pot for gas motor: off is 980, on is 1005 (pulled up)
+
 Servo leftM, rightM, pan, tilt, gas;
 
 Encoder rightEnc(2, 3);
