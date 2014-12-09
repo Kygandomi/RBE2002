@@ -18,39 +18,30 @@ void collectIMUData(){
 		Normalize();
 		Drift_correction();
 		Euler_angles();
+
+		heading = ToDeg(yaw);
 	}
 }
 
-void alignWithWall(){
- //right now sets the state to Forward
- //should use IMU to align robot with a particular axis
- robotState = FORWARD;  
-}
-
 void startTurn(boolean turnLeft){
+	Serial.println("Start turn");
 	if(turnLeft){
 		leftM.write(150);
 		rightM.write(150);
-		targetHeading = yaw - 90;
+		targetHeading = heading - 90;
 	}
 
 	else{
 		leftM.write(50);
 		rightM.write(50);
-		targetHeading = yaw + 90;
+		targetHeading = heading + 90;
 	}
 }
 
 boolean isDoneTurning(){
-	if(abs(yaw - targetHeading) > 5){
-		return false;
-	}
-	else{
-		if(goForward){
-			inTime = millis();
-		}
-	 return true;
-	}
+	int error = abs(heading - targetHeading);
+	Serial.println(error);
+	if(error < 5)
+		return true;
+	return false;
 }
-
-
