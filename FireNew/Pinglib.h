@@ -24,18 +24,6 @@ void echoCheck() { // If ping received, set the sensor distance to array.
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
 }
 
-void pingingSensors(int x){
-	if (millis() >= pingTimer[x]) {         // Is it this sensor's time to ping?
-		pingTimer[x] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
-		/*if (x == 0 && currentSensor == SONAR_NUM - 1)
-		 oneSensorCycle(); // Sensor ping cycle complete, do something with the results.*/
-		sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
-		currentSensor = x;                          // Sensor being accessed.
-		cm[currentSensor] = 999;                      // Make distance zero in case there's no ping echo for this sensor.
-		sonar[currentSensor].ping_timer(echoCheck); // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
-	}
-}
-
 void oneSensorCycle() { // Sensor ping cycle complete, do something with the results.
 	for (uint8_t i = 0; i < SONAR_NUM; i++) {
 		Serial.print(i);
@@ -44,6 +32,18 @@ void oneSensorCycle() { // Sensor ping cycle complete, do something with the res
 		Serial.print("cm ");
 	}
 	Serial.println();
+}
+
+void pingingSensors(int x){
+	if (millis() >= pingTimer[x]) {         // Is it this sensor's time to ping?
+		pingTimer[x] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
+		if (x == 0 && currentSensor == SONAR_NUM - 1)
+		 oneSensorCycle(); // Sensor ping cycle complete, do something with the results.*/
+		sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
+		currentSensor = x;                          // Sensor being accessed.
+		cm[currentSensor] = 999;                      // Make distance zero in case there's no ping echo for this sensor.
+		sonar[currentSensor].ping_timer(echoCheck); // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
+	}
 }
 
 void PingSetup(){

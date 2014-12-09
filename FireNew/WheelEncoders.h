@@ -3,16 +3,30 @@ void zeroEncoders(){
   leftEnc.write(0);
 }
 
+void EncoderSetup(){
+	pinMode(2, INPUT_PULLUP);
+	pinMode(A11, INPUT_PULLUP);
+	pinMode(18, INPUT_PULLUP);
+	pinMode(19, INPUT_PULLUP);
+
+	zeroEncoders();
+}
+
+int limit(int value){
+	if(value > 180)
+		return 180;
+	else if(value < 0)
+		return 0;
+	else
+		return value;
+}
+
 void driveStraight(){
 	int error = (leftEnc.read() - rightEnc.read());
-	int leftVal = 140 + K*error;
-	int rightVal = 40 + K*error;
+	int leftVal = limit(140 + K*error);
+	int rightVal = limit(40 + K*error);
 	leftM.write(leftVal);
 	rightM.write(rightVal);
-
-  	checkStop();
-  	//checkForOpening();
-  	//checkSafety(); 
 }
 
 void straightForABit(){
