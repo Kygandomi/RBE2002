@@ -29,6 +29,7 @@
 
 #define MIN_POWER 20
 
+
 #define FAR_THRESH 50
 #define FRONT_THRESH 20
 #define NEAR_THRESH 10
