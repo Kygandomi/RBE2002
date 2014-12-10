@@ -22,16 +22,12 @@ void setup() {
 	IMUSetup();
 	PingSetup();
 	EncoderSetup();
+	ServoSetup();
 
-	leftM.attach(leftMPin, 1000, 2000);
-	rightM.attach(rightMPin, 1000, 2000);
-
-	long initTime = millis();
-	while(millis() - initTime < 3000){
-		pingAll();
-		collectIMUData();
-	}
+	initialReadings();
 	dirTracking();
+	initHeading = heading;
+	expectedHeading = initHeading;
 
 	t = millis();
 }
@@ -53,7 +49,7 @@ void loop() {
 			break;
 		case TURN:
 			if(isDoneTurning())
-				goTo(FORWARD_TIMED);
+				goTo(FORWARD);
 			break;
 		case FLAME:
 			
@@ -63,11 +59,10 @@ void loop() {
 	}
 
 
-	// if(millis() - t > 500){
-	// 	Serial.println(heading);
-	// 	t = millis();
-	// }
-
+	if(millis() - t > 500){
+		Serial.println(heading);
+		t = millis();
+	}
 }
 
 

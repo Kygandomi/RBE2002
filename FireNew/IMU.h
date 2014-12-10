@@ -22,26 +22,3 @@ void collectIMUData(){
 		heading = ToDeg(yaw);
 	}
 }
-
-void startTurn(boolean turnLeft){
-	Serial.println("Start turn");
-	if(turnLeft){
-		leftM.write(150);
-		rightM.write(150);
-		targetHeading = heading - 90;
-	}
-
-	else{
-		leftM.write(50);
-		rightM.write(50);
-		targetHeading = heading + 90;
-	}
-}
-
-boolean isDoneTurning(){
-	int error = abs(heading - targetHeading);
-	Serial.println(error);
-	if(error < 5)
-		return true;
-	return false;
-}
