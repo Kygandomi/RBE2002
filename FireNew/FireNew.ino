@@ -14,61 +14,64 @@
 #include "WheelEncoders.h"
 #include "Flame.h"
 
+long t;
+
 void setup() {
-  Serial.begin(9600);
+	Serial.begin(9600);
 
-  //IMUSetup();
-  PingSetup();
-  EncoderSetup();
+	IMUSetup();
+	PingSetup();
+	EncoderSetup();
 
-  leftM.attach(leftMPin, 1000, 2000);
-  rightM.attach(rightMPin, 1000, 2000);
+	leftM.attach(leftMPin, 1000, 2000);
+	rightM.attach(rightMPin, 1000, 2000);
 
-  /*long initTime = millis();
-  while(millis() - initTime < 3000){
-    pingAll();
-  }
-  dirTracking();
+	long initTime = millis();
+	while(millis() - initTime < 3000){
+		pingAll();
+		collectIMUData();
+	}
+	dirTracking();
 
+<<<<<<< HEAD
   initHeading = yaw;*/
   prev_yaw = initHeading;
+=======
+	t = millis();
+>>>>>>> 1751041a3aa9323b799331186410d9539250e8ad
 }
 
 void loop() {
 
-  //collectIMUData();
-  pingAll();
-  //driveStraight();
+	collectIMUData();
+	pingAll();
 
-  // Serial.print( leftEnc.read() );
-  // Serial.print("   ");
-  // Serial.println( rightEnc.read() );
+	switch(robotState){
+		case FORWARD_TIMED:
+			straightForABit();
+			break;
+		case FORWARD:
+			checkStop();
+			//checkSafety();
+			//checkForOpening();
+			driveStraight();
+			break;
+		case TURN:
+			if(isDoneTurning())
+				goTo(FORWARD_TIMED);
+			break;
+		case FLAME:
+			
+			break;
+		default:
+			break;
+	}
 
-  //delay(200);
 
-  // switch(robotState){
-  // case FORWARD:
-  //   if(goForward){
-  //     straightForABit();
-  //   }
-  //   else
-  //     driveStraight();
-  //   break;
-  // case TURN:
-  //   if(isDoneTurning())
-  //     robotState = FORWARD;
-  //   else
-  //     robotState = TURN; 
-  //   break;
-  // case FLAME:
-  //   if(checkFlameSensor()){
-      
-  //   }
-  //   break;
-  // default:
-  //   break;
-  // }
-
+	// if(millis() - t > 500){
+	// 	Serial.println(heading);
+	// 	t = millis();
+	// }
 
 }
 

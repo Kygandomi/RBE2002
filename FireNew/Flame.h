@@ -1,13 +1,8 @@
 boolean checkFlameSensor(){
   //checks Flame sensor and returns true if flame is nearby
-  if(analogRead(A0) > 200){
-  	return true;
-  } 
-  
-  else{
-  	robotState = FORWARD; 
+	if(analogRead(A0) < 900)
+  		return true;
   	return false; 
-  }
 }
 
 void findFlame(){

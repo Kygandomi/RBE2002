@@ -37,8 +37,8 @@ void oneSensorCycle() { // Sensor ping cycle complete, do something with the res
 void pingingSensors(int x){
 	if (millis() >= pingTimer[x]) {         // Is it this sensor's time to ping?
 		pingTimer[x] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
-		if (x == 0 && currentSensor == SONAR_NUM - 1)
-		 oneSensorCycle(); // Sensor ping cycle complete, do something with the results.*/
+		// if (x == 0 && currentSensor == SONAR_NUM - 1)
+		//  oneSensorCycle(); // Sensor ping cycle complete, do something with the results.*/
 		sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
 		currentSensor = x;                          // Sensor being accessed.
 		cm[currentSensor] = 999;                      // Make distance zero in case there's no ping echo for this sensor.

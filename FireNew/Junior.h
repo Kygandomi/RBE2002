@@ -27,30 +27,55 @@
 #define gasPin 7
 #define K -0.5 //constant for controlling left and rigth motors to go at the same speed
 
+<<<<<<< HEAD
 float x_displacement = 0;
 float y_displacement = 0;
+=======
+#define FAR_THRESH 50
+#define FRONT_THRESH 20
+#define NEAR_THRESH 10
+>>>>>>> 1751041a3aa9323b799331186410d9539250e8ad
 
 Servo leftM, rightM, pan, tilt, gas;
 
-Encoder rightEnc(2, A11);
+Encoder rightEnc(2, A0);
 Encoder leftEnc(18, 19);
 
-double angle = 0; 
-boolean trackingLeft;
-float initHeading;  
-float targetHeading;
-
 typedef enum State {
-  FORWARD,
-  TURN,
-  FLAME
+	FORWARD_TIMED,
+	FORWARD,
+	TURN,
+	FLAME
 };
 
 State robotState = FORWARD;
-boolean goForward = false;
+
+boolean trackingLeft;
+float targetHeading;
+float heading;
 long inTime;
 
 void startTurn(boolean turnLeft);
+void zeroEncoders();
 
-
-
+void goTo(State s){
+	switch(s){
+		case FORWARD_TIMED:
+			zeroEncoders();
+			inTime = millis();
+			robotState = FORWARD_TIMED;
+			break;
+		case FORWARD:
+			zeroEncoders();
+			robotState = FORWARD;
+			break;
+		case TURN:
+			robotState = TURN;
+			break;
+		case FLAME:
+			robotState = FLAME;
+			break;
+		default:
+			break;
+	}
+}

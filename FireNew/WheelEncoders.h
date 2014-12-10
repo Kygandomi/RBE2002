@@ -30,18 +30,9 @@ void driveStraight(){
 }
 
 void straightForABit(){
-	if(millis()-inTime < 1000){
-		leftM.write(170);
-		rightM.write(10);
-	}
-
-	else{
-		goForward = false;
-		robotState = TURN; 
-	}
-}
-
-void drive(){
-	leftM.write(30);
-	rightM.write(145);
+	Serial.println("GOING STRAIGHT FOR A BIT");
+	if(millis()-inTime < 1000)
+		driveStraight();
+	else
+		goTo(FORWARD);
 }
