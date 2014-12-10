@@ -27,6 +27,9 @@
 #define gasPin 7
 #define K -0.5 //constant for controlling left and rigth motors to go at the same speed
 
+float x_displacement = 0;
+float y_displacement = 0;
+
 Servo leftM, rightM, pan, tilt, gas;
 
 Encoder rightEnc(2, A11);

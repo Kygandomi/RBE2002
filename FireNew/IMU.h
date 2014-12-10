@@ -53,4 +53,16 @@ boolean isDoneTurning(){
 	}
 }
 
+void sumOfVectors(){
+	//obtain angualr and linear displacement
+	float ang_displacement = yaw - prev_yaw;
+	float displacement = (leftEnc.read()+rightEnc.read())/2;
+	//calculation for displacement
+	// x_ and y_displacement are decleared in Junior.h
+	x_displacement += displacement * cos(ang_displacement);
+	y_displacement += displacement * sin(ang_displacement);
+	//reset the sensors
+	zeroEncoders();
+	prev_yaw = yaw;
+}
 

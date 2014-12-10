@@ -31,6 +31,7 @@ void setup() {
   dirTracking();
 
   initHeading = yaw;*/
+  prev_yaw = initHeading;
 }
 
 void loop() {
