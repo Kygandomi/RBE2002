@@ -42,14 +42,24 @@ void loop() {
 			straightForABit();
 			break;
 		case FORWARD:
+			if(isFirstCheck){
+				if(trackingLeft){
+					initDist = cm[LB];
+				}
+				else{
+					initDist = cm[RB];
+				}
+				isFirstCheck = false;
+			}
 			checkStop();
+			checkForOpening();
 			//checkSafety();
-			//checkForOpening();
 			driveStraight();
 			break;
 		case TURN:
-			if(isDoneTurning())
+			if(isDoneTurning()){
 				goTo(FORWARD);
+			}
 			break;
 		case FLAME:
 			
@@ -59,10 +69,6 @@ void loop() {
 	}
 
 
-	if(millis() - t > 500){
-		Serial.println(heading);
-		t = millis();
-	}
 }
 
 

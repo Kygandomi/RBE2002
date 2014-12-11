@@ -31,10 +31,10 @@
 
 
 #define FAR_THRESH 50
-#define FRONT_THRESH 20
+#define FRONT_THRESH 12
 #define NEAR_THRESH 10
 
-#define ENCODER_TARGET 315
+#define ENCODER_TARGET 320; 
 
 Servo leftM, rightM, pan, tilt, gas;
 
@@ -54,6 +54,10 @@ boolean trackingLeft;
 float targetHeading, initHeading, expectedHeading;
 float heading;
 
+int initDist = 0;
+int finalDist = 0;
+boolean isFirstCheck = true;
+
 long inTime;
 int turnTicks;
 
@@ -61,6 +65,7 @@ void startTurn(boolean turnLeft);
 void zeroEncoders();
 void pingAll();
 void collectIMUData();
+void getInitDist();
 
 void ServoSetup(){
 	leftM.attach(leftMPin);

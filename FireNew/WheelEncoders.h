@@ -1,3 +1,4 @@
+#include <math.h>
 void zeroEncoders(){
   rightEnc.write(0);
   leftEnc.write(0);
@@ -16,17 +17,51 @@ void driveStraight(){
 }
 
 void straightForABit(){
-	Serial.println("GOING STRAIGHT FOR A BIT");
-	if(millis()-inTime < 1000)
-		driveStraight();
-	else
+	if(leftEnc.read() > 300 && rightEnc.read() > 300)
 		goTo(FORWARD);
+	else
+		driveStraight();
+		
 }
 
+
+
 void startTurn(boolean turnLeft){
-	expectedHeading += 90;
+	if(trackingLeft){
+		finalDist = cm[LB];
+		isFirstCheck = true;
+	}
+
+	else{
+		finalDist = cm[RB];
+		isFirstCheck = true; 
+	}
+
+	Serial.print("initDist ");
+	Serial.println(initDist);
+	Serial.print("finalDist ");
+	Serial.println(finalDist);
+
+	int encAverage = (leftEnc.read() + rightEnc.read())/2;
+	double toCM = encAverage / 16.4; 
+
+	float error = asin((finalDist - initDist)/toCM);
+	float errAngle = (180/ 3.14)*error;
+	float errTicks = 3.36 * errAngle; 
+
 	zeroEncoders();
-	turnTicks = turnLeft? -ENCODER_TARGET : ENCODER_TARGET;
+
+	if(turnLeft){
+		turnTicks = -320 + errTicks;	
+	}
+	else {
+		turnTicks = 320 - errTicks;
+	}
+
+	Serial.print("errorAngle ");
+	Serial.println(errAngle);
+	Serial.print(" turnTicks ");
+	Serial.println(turnTicks);
 }
 
 boolean isDoneTurning(){
@@ -37,9 +72,9 @@ boolean isDoneTurning(){
 		return true;
 	}
 
-	Serial.print(abs(leftPos - turnTicks));
-	Serial.print("   ");
-	Serial.println(abs(rightPos + turnTicks));
+	//Serial.print(abs(leftPos - turnTicks));
+	//Serial.print("   ");
+	//Serial.println(abs(rightPos + turnTicks));
 
 	float speed = turnTicks > 0? 1.5 : -1.5;
 

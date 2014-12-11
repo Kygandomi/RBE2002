@@ -46,3 +46,8 @@ void dirTracking(){
 		trackingLeft = false; 
 	}
 }
+
+void getInitDist(){
+	
+					
+}
