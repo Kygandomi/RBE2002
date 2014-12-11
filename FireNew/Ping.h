@@ -9,15 +9,16 @@ void checkStop(){
 }
 
 void checkForOpening(){
+
 	if(trackingLeft){
 		if(cm[LB] > FAR_THRESH){
-			startTurn(trackingLeft);
+			startTurnOpening(trackingLeft);
 			goTo(TURN);
 		}
 	}
 	else{
 		if(cm[RB] > FAR_THRESH){
-			startTurn(trackingLeft);
+			startTurnOpening(trackingLeft);
 			goTo(TURN);
 		}
 	}
@@ -45,9 +46,4 @@ void dirTracking(){
 	else if(cm[RB] < cm[LB]){
 		trackingLeft = false; 
 	}
-}
-
-void getInitDist(){
-	
-					
 }

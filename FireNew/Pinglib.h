@@ -1,6 +1,6 @@
 #define SONAR_NUM     5 // Number or sensors.
 #define MAX_DISTANCE  250 // Maximum distance (in cm) to ping.
-#define PING_INTERVAL 50 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
+#define PING_INTERVAL 70 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
 
 unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
@@ -54,7 +54,6 @@ void PingSetup(){
 
 void pingAll(){
 	pingingSensors(0);
-
 	pingingSensors(1);
 	pingingSensors(2);
 	pingingSensors(3);

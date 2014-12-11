@@ -62,6 +62,7 @@ long inTime;
 int turnTicks;
 
 void startTurn(boolean turnLeft);
+void startTurnOpening(boolean turnLeft);
 void zeroEncoders();
 void pingAll();
 void collectIMUData();

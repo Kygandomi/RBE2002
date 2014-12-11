@@ -26,10 +26,7 @@ void setup() {
 
 	initialReadings();
 	dirTracking();
-	initHeading = heading;
-	expectedHeading = initHeading;
 
-	t = millis();
 }
 
 void loop() {
@@ -52,13 +49,17 @@ void loop() {
 				isFirstCheck = false;
 			}
 			checkStop();
+			Serial.print("LB: ");
+			Serial.print(cm[LB]);
+			Serial.print(" RB: ");
+			Serial.println(cm[RB]);
 			checkForOpening();
 			//checkSafety();
 			driveStraight();
 			break;
 		case TURN:
 			if(isDoneTurning()){
-				goTo(FORWARD);
+				goTo(FORWARD_TIMED);
 			}
 			break;
 		case FLAME:

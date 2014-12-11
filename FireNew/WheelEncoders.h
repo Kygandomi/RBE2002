@@ -17,11 +17,21 @@ void driveStraight(){
 }
 
 void straightForABit(){
-	if(leftEnc.read() > 300 && rightEnc.read() > 300)
+	if(leftEnc.read() > 750 && rightEnc.read() > 750)
 		goTo(FORWARD);
 	else
 		driveStraight();
 		
+}
+
+void startTurnOpening(boolean turnLeft){
+	zeroEncoders();
+	if(turnLeft){
+		turnTicks = -320;	
+	}
+	else {
+		turnTicks = 320;
+	}
 }
 
 
@@ -37,10 +47,10 @@ void startTurn(boolean turnLeft){
 		isFirstCheck = true; 
 	}
 
-	Serial.print("initDist ");
-	Serial.println(initDist);
-	Serial.print("finalDist ");
-	Serial.println(finalDist);
+	// Serial.print("initDist ");
+	// Serial.println(initDist);
+	// Serial.print("finalDist ");
+	// Serial.println(finalDist);
 
 	int encAverage = (leftEnc.read() + rightEnc.read())/2;
 	double toCM = encAverage / 16.4; 
@@ -69,6 +79,7 @@ boolean isDoneTurning(){
 
 	if(abs(leftPos - turnTicks) < 10 && abs(rightPos + turnTicks) < 10){
 		drive(0, 0);
+		zeroEncoders();
 		return true;
 	}
 
