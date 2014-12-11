@@ -1,13 +1,9 @@
 #define SONAR_NUM     5 // Number or sensors.
-#define MAX_DISTANCE  250 // Maximum distance (in cm) to ping.
+#define MAX_DISTANCE  300 // Maximum distance (in cm) to ping.
 #define PING_INTERVAL 70 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
 
 unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
-unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
-unsigned int oldRB;
-unsigned int oldLB;
-unsigned int prevRB;
-unsigned int prevLB;    
+unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.   
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
 NewPing sonar[SONAR_NUM] = {     // Sensor object array.
@@ -41,7 +37,7 @@ void pingingSensors(int x){
 		//  oneSensorCycle(); // Sensor ping cycle complete, do something with the results.*/
 		sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
 		currentSensor = x;                          // Sensor being accessed.
-		cm[currentSensor] = 999;                      // Make distance zero in case there's no ping echo for this sensor.
+		cm[currentSensor] = MAX_DISTANCE;                      // Make distance zero in case there's no ping echo for this sensor.
 		sonar[currentSensor].ping_timer(echoCheck); // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
 	}
 }
@@ -53,9 +49,6 @@ void PingSetup(){
 }
 
 void pingAll(){
-	pingingSensors(0);
-	pingingSensors(1);
-	pingingSensors(2);
-	pingingSensors(3);
-	pingingSensors(4);
+	for(int i = 0; i < SONAR_NUM; i++)
+		pingingSensors(i);
 }

@@ -135,10 +135,6 @@ void IMUSetup()
 
 	AN_OFFSET[5]-=GRAVITY*SENSOR_SIGN[5];
 
-	//Serial.println("Offset:");
-	for(int y=0; y<6; y++)
-		Serial.println(AN_OFFSET[y]);
-
 	delay(2000);
 	timer=millis();
 	delay(20);

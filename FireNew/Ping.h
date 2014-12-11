@@ -1,49 +1,32 @@
 void checkStop(){
 	if(cm[LF] < FRONT_THRESH || cm[RF] < FRONT_THRESH || cm[MF] < FRONT_THRESH){
-
-		leftM.write(90);
-		rightM.write(90);
-		startTurn(!trackingLeft);
-		goTo(TURN);
+		drive(0, 0);
+		goTo(REROUTE);
 	}
 }
 
 void checkForOpening(){
-
-	if(trackingLeft){
-		if(cm[LB] > FAR_THRESH){
-			startTurnOpening(trackingLeft);
-			goTo(TURN);
-		}
-	}
-	else{
-		if(cm[RB] > FAR_THRESH){
-			startTurnOpening(trackingLeft);
-			goTo(TURN);
-		}
+	int measurement = trackingLeft? cm[LB] : cm[RB];
+	if(measurement > FAR_THRESH && measurement < MAX_DISTANCE){
+		//startTurnOpening(trackingLeft);
+		goTo(FORWARD_TIMED); then(EXPLORE);
 	}
 }
 
 void checkSafety(){
-	if(trackingLeft){
-		if(cm[LB] < NEAR_THRESH){
-			startTurn(!trackingLeft);
-			goTo(TURN);
-		}
-	}
-	else{
-		if(cm[RB] < NEAR_THRESH){
-			startTurn(!trackingLeft);
-			goTo(TURN);
-		}
-	}
+	int measurement = trackingLeft? cm[LB] : cm[RB];
+	if(measurement < NEAR_THRESH)
+		goTo(REROUTE);
 }
 
 void dirTracking(){
-	if(cm[LB] < cm[RB]){
-		trackingLeft = true;
-	}	
-	else if(cm[RB] < cm[LB]){
-		trackingLeft = false; 
-	}
+	trackingLeft = (cm[LB] < cm[RB]);
+}
+
+void getInitDist(){
+	initDist = trackingLeft? cm[LB] : cm[RB];
+}
+
+void getFinalDist(){
+	finalDist = trackingLeft? cm[LB] : cm[RB];
 }

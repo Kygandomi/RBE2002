@@ -29,15 +29,13 @@
 
 #define MIN_POWER 20
 
-
 #define FAR_THRESH 50
 #define FRONT_THRESH 12
 #define NEAR_THRESH 10
 
-#define ENCODER_TARGET 320; 
+#define ENCODER_TARGET 320
 
 Servo leftM, rightM, pan, tilt, gas;
-
 Encoder rightEnc(2, A0);
 Encoder leftEnc(18, 19);
 
@@ -45,20 +43,18 @@ typedef enum State {
 	FORWARD_TIMED,
 	FORWARD,
 	TURN,
+	REROUTE,
+	EXPLORE,
 	FLAME
 };
-
-State robotState = FORWARD;
+State nextState, robotState = FORWARD;
 
 boolean trackingLeft;
-float targetHeading, initHeading, expectedHeading;
 float heading;
 
 int initDist = 0;
 int finalDist = 0;
-boolean isFirstCheck = true;
 
-long inTime;
 int turnTicks;
 
 void startTurn(boolean turnLeft);
@@ -67,6 +63,7 @@ void zeroEncoders();
 void pingAll();
 void collectIMUData();
 void getInitDist();
+void getFinalDist();
 
 void ServoSetup(){
 	leftM.attach(leftMPin);
@@ -103,23 +100,27 @@ void initialReadings(){
 }
 
 void goTo(State s){
+	robotState = s;
 	switch(s){
 		case FORWARD_TIMED:
 			zeroEncoders();
-			inTime = millis();
-			robotState = FORWARD_TIMED;
 			break;
 		case FORWARD:
+			getInitDist();
 			zeroEncoders();
-			robotState = FORWARD;
 			break;
 		case TURN:
-			robotState = TURN;
+			zeroEncoders();
+			break;
+		case REROUTE:
+			break;
+		case EXPLORE:
 			break;
 		case FLAME:
-			robotState = FLAME;
-			break;
-		default:
 			break;
 	}
+}
+
+void then(State s){
+	nextState = s;
 }

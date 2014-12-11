@@ -5,7 +5,6 @@ void collectIMUData(){
 		timer=millis();
 
 		Read_Gyro();
-
 		Read_Accel();
 
 		if (counter > 5){
