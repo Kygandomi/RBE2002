@@ -44,6 +44,9 @@ void loop() {
 		case TURN:
 			completeTurn();
 			break;
+		case ALIGN:
+			adjustTurn();
+			break;
 		case REROUTE:
 			startTurn();
 			break;
@@ -53,11 +56,7 @@ void loop() {
 		case FLAME:
 			
 			break;
-		default:
-			break;
 	}
-
-
 }
 
 

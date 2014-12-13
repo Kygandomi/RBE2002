@@ -27,13 +27,13 @@
 #define gasPin 7
 #define K 0.5
 
-#define MIN_POWER 20
+#define MIN_POWER 30
 
 #define FAR_THRESH 50
 #define FRONT_THRESH 12
 #define NEAR_THRESH 10
 
-#define ENCODER_TARGET 320
+#define ENCODER_TARGET 310
 
 Servo leftM, rightM, pan, tilt, gas;
 Encoder rightEnc(2, A0);
@@ -43,6 +43,7 @@ typedef enum State {
 	FORWARD_TIMED,
 	FORWARD,
 	TURN,
+	ALIGN,
 	REROUTE,
 	EXPLORE,
 	FLAME
@@ -106,7 +107,7 @@ void goTo(State s){
 			zeroEncoders();
 			break;
 		case FORWARD:
-			getInitDist();
+			//getInitDist();
 			zeroEncoders();
 			break;
 		case TURN:

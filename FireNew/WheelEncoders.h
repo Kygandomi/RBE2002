@@ -11,7 +11,7 @@ void EncoderSetup(){
 }
 
 void driveStraight(){
-	int error = leftEnc.read() - rightEnc.read();
+	int error = leftEnc.read() - rightEnc.read(); 
 	drive(60 - K*error, 60 + K*error);
 }
 
@@ -22,7 +22,7 @@ double distanceTraveled(){
 }
 
 void straightForABit(){
-	if(distanceTraveled() > 20)
+	if(distanceTraveled() > 30)
 		goTo(nextState);
 	else
 		driveStraight();
@@ -35,13 +35,13 @@ void startTurnOpening(){
 }
 
 void startTurn(){
-	getFinalDist();
+	//getFinalDist();
 
-	float error = asin((finalDist - initDist)/distanceTraveled());
-	float errTicks = 3.36 * ToDeg(error);
+	//float error = asin((finalDist - initDist)/distanceTraveled());
+	//float errTicks = 3.36 * ToDeg(error);
 
 	turnTicks = trackingLeft? ENCODER_TARGET : -ENCODER_TARGET;
-	turnTicks += trackingLeft? -errTicks : errTicks;
+	//turnTicks += trackingLeft? -errTicks : errTicks;
 	
 	goTo(TURN); then(FORWARD);
 }
@@ -51,8 +51,7 @@ void completeTurn(){
 
 	if(abs(leftPos - turnTicks) < 10 && abs(rightPos + turnTicks) < 10){
 		drive(0, 0);
-		goTo(nextState); then(FORWARD);
-		return;
+		goTo(ALIGN);
 	}
 
 	float speed = turnTicks > 0? 1.5 : -1.5;
@@ -64,4 +63,19 @@ void completeTurn(){
 	drive(leftSpeed - K * diffError, rightSpeed + K * diffError);*/
 
 	drive (leftSpeed, rightSpeed);
+}
+
+void adjustTurn(){
+	int alignError = (cm[LF] - cm[RF]);
+	Serial.print("left ");
+	Serial.print(cm[LF]);
+	Serial.print(" right ");
+	Serial.println(cm[RF]);
+	if(abs(alignError) > 0 && abs(alignError) < 10){
+		drive(alignError, -alignError);
+	}
+	else if(cm[LF] != 300 && cm[RF] != 300){
+		drive(0, 0);
+		goTo(nextState); then(FORWARD);
+	}
 }
