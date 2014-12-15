@@ -5,11 +5,6 @@ bool driveBackwards(){
 	return (distanceTraveled() < -10);
 }
 
-void driveStraight(){
-	int error = (leftEnc.read() - rightEnc.read()) * K;
-	drive(50 - error, 50 + error);
-}
-
 void moveFarther(){
 	if(trackingLeft)
 		leftEnc.write(leftEnc.read() - 1);
@@ -22,6 +17,18 @@ void moveCloser(){
 		leftEnc.write(leftEnc.read() - 1);
 	else
 		rightEnc.write(rightEnc.read() - 1);
+}
+
+void driveStraight(){
+	int dist = getSideDist();
+	if(dist < FAR_THRESH){
+		if(dist > initDist)
+			moveCloser();
+		else if(dist < initDist)
+			moveFarther();
+	}
+	int error = (leftEnc.read() - rightEnc.read()) * K;
+	drive(50 - error, 50 + error);
 }
 
 void startTurn(){

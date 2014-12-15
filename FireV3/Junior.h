@@ -35,7 +35,7 @@
 #define FRONT_THRESH 13
 #define NEAR_THRESH 10
 
-#define ENCODER_TARGET 310
+#define ENCODER_TARGET 315
 #define FLAME_THRESH 900
 
 Servo leftM, rightM, pan, tilt, gas;
@@ -55,6 +55,7 @@ typedef enum State {
 State robotState;
 
 float heading;
+int leftCM, rightCM;
 
 bool trackingLeft;
 bool goFarther;

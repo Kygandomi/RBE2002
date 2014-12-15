@@ -1,17 +1,19 @@
 int getSideDist(){
-	return trackingLeft? cm[LB] : cm[RB];
+	return trackingLeft? leftCM : rightCM;
 }
 
 bool checkStop(){
 	return (cm[LF] < FRONT_THRESH || cm[RF] < FRONT_THRESH || cm[MF] < FRONT_THRESH);
 }
 
-bool checkForOpening(){
-	if(getSideDist() > FAR_THRESH && getSideDist() < MAX_DISTANCE)
-		return true;
+int checkForOpening(){
+	if(getSideDist() == MAX_DISTANCE)
+		return 0;
+	if(getSideDist() > FAR_THRESH)
+		return 1;
 	else{
 		goFarther = false;
-		return false;
+		return -1;
 	}
 }
 
@@ -20,11 +22,18 @@ bool checkSafety(){
 }
 
 void setDirection(){
-	trackingLeft = (cm[LB] < cm[RB]);
+	trackingLeft = (leftCM < rightCM);
 }
 
 void getInitDist(){
 	initDist = getSideDist();
 	if(initDist > FAR_THRESH)
 		goFarther = true;
+}
+
+void pingAll(){
+	leftCM = cm[LB];
+	rightCM = cm[RB];
+	for(int i = 0; i < SONAR_NUM; i++)
+		pingingSensors(i);
 }

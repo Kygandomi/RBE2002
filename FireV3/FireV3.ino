@@ -43,7 +43,7 @@ void loop() {
 				startTurn();
 				goTo(TURN);
 			}
-			if(checkForOpening())
+			if(checkForOpening() == 1)
 				goTo(EXPLORE);
 			if(checkCliff())
 				goTo(BACKUP);
@@ -51,13 +51,11 @@ void loop() {
 			break;
 		case EXPLORE:
 			if(distanceTraveled() > (goFarther? 30 : 15)){
-				Serial.println("Reached the destination!");
 				startTurnOpening();
 				goTo(TURN);
 			}
-			if(!checkForOpening()){
+			if(checkForOpening() == -1)
 				goTo(FORWARD);
-			}
 			driveStraight();
 			break;
 		case BACKUP:
