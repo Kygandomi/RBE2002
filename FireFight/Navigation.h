@@ -55,7 +55,7 @@ void driveBackwards(){
 		int rightEncTick = rightEnc.read();
 		int Eerror = leftEncTick - rightEncTick;
 		int currentEncAverage = (leftEnc.read() + rightEnc.read())/2;
-		if(currentEncAverage - initBackUpEncAverage < -50){
+		if(currentEncAverage - initBackUpEncAverage < -80){
 			drive(0, 0);
 			goTo(REROUTE);
 		}
@@ -82,7 +82,7 @@ void driveStraight(){
 		}
 		int leftEncTick = leftEnc.read();
 		int rightEncTick = rightEnc.read();
-		 int Kp = 4;
+		 int Kp = 2;
 	
 	if(trackingLeft){
 			if (cm[LB] == prevLB  || cm[LB] > FAR_THRESH || prevLB > FAR_THRESH){
@@ -110,5 +110,5 @@ void driveStraight(){
 	int Eerror = leftEncTick - rightEncTick;
 	int totError = Eerror + accumError;
 
-	drive(60 - K*totError - Kp*Rerror, 60 + K*totError + Kp*Rerror);
+	drive(70 - K*totError - Kp*Rerror, 70 + K*totError + Kp*Rerror);
 }

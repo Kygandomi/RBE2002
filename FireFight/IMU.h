@@ -23,20 +23,21 @@ void collectIMUData(){
 }
 
 void VectorSetup(){
-	//lcd.begin(16, 2);
 	initHeading = yaw;
 
-	Timer1.initialize(100);
+	Timer1.initialize(100000);
 	Timer1.attachInterrupt(sov);
+
+	lcd.begin(16, 2);
 }
 
 void sov(){
 	if(!blockSOV){
-		float linDiff = (((leftEnc.read()+rightEnc.read()) * 6.0) / 200.0) - prevLinDis;
+		float linDiff = ((leftEnc.read()+rightEnc.read()) / 32.8) - prevLinDis;
 		int currentAngDis = initHeading - yaw;
 
-		xDis += linDiff * cos(currentAngDis);																																																																																																																																																																																																																																																																																																																																																																												
-		yDis += linDiff * sin(currentAngDis);
+		xDis += linDiff * sin(currentAngDis);
+		yDis += linDiff * cos(currentAngDis);
 
 		prevLinDis += linDiff;
 	}

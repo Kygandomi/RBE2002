@@ -39,7 +39,7 @@
 Servo leftM, rightM, pan, tilt, gas;
 Encoder rightEnc(2, A0);
 Encoder leftEnc(18, 19);
-LiquidCrystal lcd(31, 32, 33, 34, 35, 36);
+LiquidCrystal lcd(40,41,42,43,44,45);
 
 /* STATE ENUMERATION */
 typedef enum State {
@@ -84,8 +84,8 @@ void setPrevPing();
 bool blockSOV = false;
 float heading, initHeading;
 float prevLinDis;
-float xDis;
-float yDis;
+double xDis;
+double yDis;
 
 void collectIMUData();
 void sov();

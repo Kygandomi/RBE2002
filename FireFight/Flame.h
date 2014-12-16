@@ -25,7 +25,7 @@ void setTarget(int target){
 
 void putOutFlame(){
 
-	if(millis() - initGasTime < 1500){
+	if(millis() - initGasTime < 1000){
 		setTarget(770);
 	}
 	else if(millis() - initGasTime < 4000){
@@ -57,7 +57,7 @@ bool findFlame(){
 		if (posX >= maxX){
 			posX = minX;
 			delay(100);
-			posY += 8;
+			posY += 6;
 		}
 
 		int tempReading = (analogRead(A1));
@@ -78,7 +78,7 @@ bool findFlame(){
 
 
 		tilt.write(posY);
-		posX += 4;
+		posX += 3;
 		pan.write(posX);
 		return false;
 	}

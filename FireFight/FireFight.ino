@@ -30,14 +30,9 @@ void setup() {
 	initialReadings();
 	setDirection();
 	setFlameServo();
+
 	Serial.println("Start");
-
-	initHeading = yaw;
-
-	Timer1.initialize(1000);
-	Timer1.attachInterrupt(sov);
-
-	Serial.println("Ok lets go...");
+	VectorSetup();
 	goTo(FORWARD);
 }
 
@@ -51,7 +46,7 @@ void loop() {
 	Serial.print("right: ");
 	Serial.println(rightEnc.read());
 
-	/*switch(robotState){
+	switch(robotState){
 		case FORWARD:
 			checkStop();
 			checkInitDist();
@@ -126,6 +121,11 @@ void loop() {
 			break;
 		case STOP:
 			drive(0,0);
+			lcd.print("X: ");
+			lcd.print(xDis);
+			lcd.print("Y: ");
+			lcd.print(yDis);
+			while(1);
 			break;
 		case PAN_SENSOR:
 			checkStopFindFlame();
@@ -134,5 +134,5 @@ void loop() {
 			break;
 	}
 
-	setPrevPing();*/
+	setPrevPing();
 }
