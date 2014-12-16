@@ -22,22 +22,22 @@ void collectIMUData(){
 	}
 }
 
+void VectorSetup(){
+	//lcd.begin(16, 2);
+	initHeading = yaw;
+
+	Timer1.initialize(100);
+	Timer1.attachInterrupt(sov);
+}
+
 void sov(){
 	if(!blockSOV){
 		float linDiff = (((leftEnc.read()+rightEnc.read()) * 6.0) / 200.0) - prevLinDis;
 		int currentAngDis = initHeading - yaw;
 
-		xDis += linDiff * sin(currentAngDis);																																																																																																																																																																																																																																																																																																																																																																												
-		yDis += linDiff * cos(currentAngDis);
+		xDis += linDiff * cos(currentAngDis);																																																																																																																																																																																																																																																																																																																																																																												
+		yDis += linDiff * sin(currentAngDis);
 
 		prevLinDis += linDiff;
 	}
-}
-
-void VectorSetup(){
-	lcd.begin(16, 2);
-	initHeading = yaw;
-
-	Timer1.initialize(100);
-	Timer1.attachInterrupt(sov);
 }

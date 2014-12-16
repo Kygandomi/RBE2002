@@ -30,9 +30,14 @@ void setup() {
 	initialReadings();
 	setDirection();
 	setFlameServo();
+	Serial.println("Start");
 
-	VectorSetup();
+	initHeading = yaw;
 
+	Timer1.initialize(1000);
+	Timer1.attachInterrupt(sov);
+
+	Serial.println("Ok lets go...");
 	goTo(FORWARD);
 }
 
@@ -41,8 +46,12 @@ void loop() {
 	collectIMUData();
 	pingAll();
 	setCurrPing();
+	Serial.print("left: ");
+	Serial.println(leftEnc.read());
+	Serial.print("right: ");
+	Serial.println(rightEnc.read());
 
-	switch(robotState){
+	/*switch(robotState){
 		case FORWARD:
 			checkStop();
 			checkInitDist();
@@ -125,5 +134,5 @@ void loop() {
 			break;
 	}
 
-	setPrevPing();
+	setPrevPing();*/
 }
