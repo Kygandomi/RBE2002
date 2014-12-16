@@ -12,8 +12,7 @@ void startTurnOpening(){
 }
 
 void startTurn(){
-		getFinalDist();
-
+	getFinalDist();
 
 	float error = asin((finalDist - initDist) / distanceTraveled());
 	float errTicks = 3.36 * ToDeg(error);

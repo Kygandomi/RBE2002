@@ -1,6 +1,7 @@
 void zeroEncoders(){
-  rightEnc.write(0);
-  leftEnc.write(0);
+	prevLinDis = 0;
+	rightEnc.write(0);
+	leftEnc.write(0);
 }
 
 void EncoderSetup(){
@@ -15,9 +16,8 @@ double distanceTraveled(){
 	double toCM = encAverage / 16.4;
 	return toCM;
 }
+
 double initDistanceTraveled(){
 	double toCM = initEncAverage / 16.4;
 	return toCM;
 }
-
-

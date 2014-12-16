@@ -1,10 +1,6 @@
-#ifndef Flame_H
-#define Flame_H
-#define flameThreshold 800
-
 void checkFlameSensor(){
 	if(flameDetectedOnce){
-	isFlameFound = analogRead(flameSensor) < flameThreshold;
+	isFlameFound = analogRead(flameSensor) < FLAME_THRESH;
 		if(isFlameFound){
 			flameDetectedOnce = false;
 			goTo(FORWARD);
@@ -26,7 +22,6 @@ void setTarget(int target){
 	int value = limit(90 - error * 0.2);
 	gas.write(value);
 }
-
 
 void putOutFlame(){
 
@@ -91,7 +86,7 @@ bool findFlame(){
 
 void checkFlameFront(){
 	pan.write(80);
-	if(analogRead(flameSensor) < flameThreshold){
+	if(analogRead(flameSensor) < FLAME_THRESH){
 		drive(0,0);
 		goTo(FLAME);
 	}
@@ -115,6 +110,7 @@ void setFlameServo(){
 		pan.write(30);
 	}
 }
+
 void checkStopFindFlame(){
 	drive(0,0);
 	int lowestVal = analogRead(A1) + 100;
@@ -139,9 +135,3 @@ void checkStopFindFlame(){
 		startTurn();
 	}
 }
-//pan values for flame sensor
-//right 135 
-//front 80
-//left 30
-
-#endif

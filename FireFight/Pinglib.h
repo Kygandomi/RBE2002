@@ -49,16 +49,3 @@ void PingSetup(){
 	for (uint8_t i = 1; i < SONAR_NUM; i++)
 		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
 }
-
-void pingAll(){
-	for(int i = 0; i < SONAR_NUM; i++)
-		pingingSensors(i);
-}
-void setCurrPing(){
-	currLB = cm[LB];
-	currRB = cm[RB];
-}
-void setPrevPing(){
-	prevLB = cm[LB];
-	prevRB = cm[RB];
-}

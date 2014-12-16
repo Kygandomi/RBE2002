@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <L3G.h>
 #include <LSM303.h>
+#include <TimerOne.h>
+#include <LiquidCrystal.h>
 
 #include "Junior.h"
 #include "Pinglib.h"
@@ -15,6 +17,7 @@
 #include "Flame.h"
 #include "Servos.h"
 #include "Navigation.h"
+#include "Extra.h"
 
 void setup() {
 	Serial.begin(9600);
@@ -27,6 +30,8 @@ void setup() {
 	initialReadings();
 	setDirection();
 	setFlameServo();
+
+	//VectorSetup();
 
 	goTo(FORWARD);
 }
@@ -64,7 +69,7 @@ void loop() {
 			if(isOpening){
 				int currentEncAverage = (leftEnc.read() + rightEnc.read())/2;
 				if(trackingLeft){
-					if (currentEncAverage != initEncAverage && cm[LB] > FAR_THRESH){
+					if(currentEncAverage != initEncAverage && cm[LB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
 						encDetect = 275;
 						if(initDist > FAR_THRESH && isFirstDetect){
@@ -73,7 +78,7 @@ void loop() {
 					}
 				}
 				else{
-					if (currentEncAverage != initEncAverage && cm[RB] > FAR_THRESH){
+					if(currentEncAverage != initEncAverage && cm[RB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
 						encDetect = 275;
 						if(initDist > FAR_THRESH && isFirstDetect){
@@ -104,7 +109,7 @@ void loop() {
 			break;
 		case FLAME:
 			if(findFlame()){
-				goTo(PUT_OUT_FLAME);	
+				goTo(PUT_OUT_FLAME);
 			}
 			break;
 		case PUT_OUT_FLAME:

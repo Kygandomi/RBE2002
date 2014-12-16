@@ -5,8 +5,8 @@ void checkStop(){
 			goTo(PAN_SENSOR);
 		}
 		else{
-		startTurn();
-	}
+			startTurn();
+		}
 	}
 }
 void checkInitDist(){
@@ -65,4 +65,17 @@ void getInitDist(){
 
 void getFinalDist(){
 	finalDist = trackingLeft? cm[LB] : cm[RB];
+}
+
+void pingAll(){
+	for(int i = 0; i < SONAR_NUM; i++)
+		pingingSensors(i);
+}
+void setCurrPing(){
+	currLB = cm[LB];
+	currRB = cm[RB];
+}
+void setPrevPing(){
+	prevLB = cm[LB];
+	prevRB = cm[RB];
 }

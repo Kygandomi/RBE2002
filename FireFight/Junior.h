@@ -1,6 +1,4 @@
-#include <Servo.h>
-#include <Encoder.h>
-#include <NewPing.h>
+/* CONSTANT DEFINITIONS */
 
 #define lFrontI 12 //left front 
 #define lFrontO 13 
@@ -13,8 +11,13 @@
 #define rFrontI 22//right front 
 #define rFrontO 23 
 #define flameSensor A1
-#define startButton 37
 #define cliffSensor A5
+
+#define leftMPin 10
+#define rightMPin 11
+#define panPin 9 
+#define tiltPin 8
+#define gasPin 7
 
 #define LB 0
 #define LF 1
@@ -22,25 +25,23 @@
 #define RF 3
 #define RB 4
 
-#define leftMPin 10
-#define rightMPin 11
-#define panPin 9 
-#define tiltPin 8
-#define gasPin 7
-#define K 0.5
-
 #define MIN_POWER 20
+#define K 0.5
 
 #define FAR_THRESH 30
 #define FRONT_THRESH 13
 #define NEAR_THRESH 10
 
 #define ENCODER_TARGET 310
+#define FLAME_THRESH 800
 
+/* OBJECTS */
 Servo leftM, rightM, pan, tilt, gas;
 Encoder rightEnc(2, A0);
 Encoder leftEnc(18, 19);
+LiquidCrystal lcd(31, 32, 33, 34, 35, 36);
 
+/* STATE ENUMERATION */
 typedef enum State {
 	FORWARD,
 	TURN,
@@ -52,21 +53,45 @@ typedef enum State {
 	STOP,
 	BACKUP
 };
-State nextState, robotState;
+State robotState;
 
-boolean trackingLeft;
-boolean isOpening = false;
-boolean isFirstDetect = false;
-boolean isFirstOpen = true;
+/* EXTRA */
+void initialReadings();
+void checkCliff();
+void goTo(State s);
 
-boolean isFlameFound = false;
-boolean flameDetectedOnce = true;
-boolean flameExists = false;
-float heading;
-
+/* PING */
+bool trackingLeft;
+bool isOpening = false;
+bool isFirstDetect = false;
+bool isFirstOpen = true;
 float initDist;
 float finalDist;
 float endDist;
+
+void checkStop();
+void checkInitDist();
+void checkForOpening();
+void checkSafety();
+void setDirection();
+void getInitDist();
+void getFinalDist();
+void pingAll();
+void setCurrPing();
+void setPrevPing();
+
+/* IMU */
+bool blockSOV = false;
+float heading, initHeading;
+float prevLinDis;
+float xDis;
+float yDis;
+
+void collectIMUData();
+void sov();
+void VectorSetup();
+
+/* ENCODERS */
 float initEncAverage; 
 int encDiff;
 int encDetect;
@@ -74,72 +99,37 @@ int turnTicks;
 int accumError = 0;
 int initBackUpEncAverage;
 
+void zeroEncoders();
+void EncoderSetup();
+double distanceTraveled();
+double initDistanceTraveled();
+
+/* FLAME */
+bool isFlameFound = false;
+bool flameDetectedOnce = true;
+bool flameExists = false;
 int highestReading; 
 int highestEncAverage;
 unsigned long initPanTime;
 unsigned long initGasTime;
 int flameStatus[3] = {0, 180, 180}; 
 
-void startTurn();
-void startTurnOpening();
-void zeroEncoders();
-void pingAll();
-void collectIMUData();
-void getInitDist();
-void getFinalDist();
-void setPrevPing();
-void checkInitDist();
+void checkFlameSensor();
+int limit(int value);
+void setTarget(int target);
+void putOutFlame();
+bool findFlame();
+void checkFlameFront();
 void setFlameServo();
-int getEncAverage();
-void drive(int, int);
+void checkStopFindFlame();
+
+/* SERVOS */
 void ServoSetup();
-void goTo(State);
+void drive(int x, int y);
 
-void initialReadings(){
-	long initTime = millis();
-	while(millis() - initTime < 3000){
-		pingAll();
-		collectIMUData();
-	}
-}
-
-void checkCliff(){
-	if(analogRead(cliffSensor) > 800){
-		initBackUpEncAverage = (leftEnc.read() + rightEnc.read())/2;
-		goTo(BACKUP);
-	}
-}
-
-void goTo(State s){
-	robotState = s;
-	switch(s){
-		case FORWARD:
-			setFlameServo();
-			getInitDist();
-			zeroEncoders();
-			break;
-		case TURN:
-			zeroEncoders();
-			break;
-		case BACKUP:
-			break;
-		case PUT_OUT_FLAME:
-			initGasTime = millis();
-			break;		
-		case REROUTE:
-			break;
-		case STOP:
-			break;
-		case PAN_SENSOR:
-			initPanTime = millis();
-			break;
-		case EXPLORE:
-			break;
-		case FLAME:
-			break;
-	}
-}
-
-void then(State s){
-	nextState = s;
-}
+/* NAVIGATION */
+void startTurnOpening();
+void startTurn();
+void completeTurn();
+void driveBackwards();
+void driveStraight();
