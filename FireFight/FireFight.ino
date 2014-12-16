@@ -31,7 +31,7 @@ void setup() {
 	setDirection();
 	setFlameServo();
 
-	//VectorSetup();
+	VectorSetup();
 
 	goTo(FORWARD);
 }
