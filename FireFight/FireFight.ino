@@ -7,6 +7,7 @@
 #include <LSM303.h>
 #include <TimerOne.h>
 #include <LiquidCrystal.h>
+#include <WS2812.h>
 
 #include "Junior.h"
 #include "Pinglib.h"
@@ -20,6 +21,8 @@
 #include "Extra.h"
 
 void setup() {
+	LED.setOutput(LEDPIN);
+	setLed(GREEN);
 	Serial.begin(9600);
 
 	IMUSetup();
@@ -33,6 +36,7 @@ void setup() {
 
 	VectorSetup();
 	goTo(FORWARD);
+	setLed(PURPLE);
 }
 
 void loop() {
@@ -129,5 +133,6 @@ void loop() {
 			break;
 	}
 
+	updateLed();
 	setPrevPing();
 }

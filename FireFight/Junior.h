@@ -12,6 +12,8 @@
 #define rFrontO 23 
 #define flameSensor A1
 #define cliffSensor A5
+#define LEDPIN A10
+#define LEDNUM 6
 
 #define leftMPin 10
 #define rightMPin 11
@@ -40,6 +42,7 @@ Servo leftM, rightM, pan, tilt, gas;
 Encoder rightEnc(2, A0);
 Encoder leftEnc(18, 19);
 LiquidCrystal lcd(40,41,42,43,44,45);
+WS2812 LED(LEDNUM);
 
 /* STATE ENUMERATION */
 typedef enum State {
@@ -56,9 +59,19 @@ typedef enum State {
 State robotState;
 
 /* EXTRA */
+long ledTimer;
+bool ledPhase;
+typedef enum{
+	OFF, PURPLE, GREEN, FLASH
+} Color;
+Color ledState;
+cRGB ledValues;
+
 void initialReadings();
 void checkCliff();
 void goTo(State s);
+void setLed(Color newState);
+void updateLed();
 
 /* PING */
 bool trackingLeft;

@@ -28,7 +28,7 @@ void putOutFlame(){
 	if(millis() - initGasTime < 1000){
 		setTarget(770);
 	}
-	else if(millis() - initGasTime < 4000){
+	else if(millis() - initGasTime < 2000){
 		setTarget(350);
 	}
 	else {
