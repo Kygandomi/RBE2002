@@ -54,13 +54,14 @@ typedef enum State {
 };
 State robotState;
 
-float heading;
+long driveTimer;
+
+float heading, initHeading, targetHeading;
 int leftCM, rightCM;
 
 bool trackingLeft;
 bool goFarther;
 int initDist;
-int turnTicks;
 
 bool isFlameFound = false;
 bool flameExists = false;
@@ -93,24 +94,21 @@ bool checkCliff(){
 }
 
 void goTo(State s){
+	zeroEncoders();
 	Serial.print("GOTO");
 	robotState = s;
 	switch(s){
 		case FORWARD:
 			getInitDist();
-			zeroEncoders();
 			Serial.println(" FORWARD");
 			break;
 		case EXPLORE:
-			zeroEncoders();
 			Serial.println(" EXPLORE");
 			break;
 		case TURN:
-			zeroEncoders();
 			Serial.println(" TURN");
 			break;
 		case BACKUP:
-			zeroEncoders();
 			Serial.println(" BACKUP");
 			break;
 		case FLAME:

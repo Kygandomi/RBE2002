@@ -17,7 +17,7 @@ void setTarget(int target){
 	gas.write(value);
 }
 
-void putOutFlame(){
+bool putOutFlame(){
 	if(millis() - initGasTime < 1500){
 		setTarget(770);
 	}
@@ -25,8 +25,9 @@ void putOutFlame(){
 		setTarget(350);
 	}
 	else {
-		goTo(STOP);
+		return true;
 	}
+	return false;
 }
 
 bool findFlame(){

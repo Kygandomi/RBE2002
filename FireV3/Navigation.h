@@ -21,38 +21,44 @@ void moveCloser(){
 
 void driveStraight(){
 	int dist = getSideDist();
-	if(dist < FAR_THRESH){
+	if((millis() - driveTimer) > 20 && dist < FAR_THRESH){
 		if(dist > initDist)
 			moveCloser();
 		else if(dist < initDist)
 			moveFarther();
+		driveTimer = millis();
 	}
 	int error = (leftEnc.read() - rightEnc.read()) * K;
 	drive(50 - error, 50 + error);
 }
 
+int wrap(int angle){
+	if(angle > 180)
+		return angle - 360;
+	else if(angle < -180)
+		return angle + 360;
+	return angle;
+}
+
 void startTurn(){
-	turnTicks = trackingLeft? ENCODER_TARGET : -ENCODER_TARGET;
+	targetHeading = heading;
+	targetHeading += trackingLeft? 90 : -90;
+	targetHeading = wrap(targetHeading);
 }
 
 void startTurnOpening(){
-	turnTicks = trackingLeft? -ENCODER_TARGET : ENCODER_TARGET;
+	targetHeading = heading;
+	targetHeading += trackingLeft? -90 : 90;
+	targetHeading = wrap(targetHeading);
 }
 
 bool completeTurn(){
-	int leftPos = leftEnc.read(), rightPos = rightEnc.read();
-
-	if(abs(leftPos - turnTicks) < 10 && abs(rightPos + turnTicks) < 10)
+	int diff = abs(wrap(targetHeading - heading));
+	if(diff < 10)
 		return true;
 
-	float speed = turnTicks > 0? 1.5 : -1.5;
+	int speed = (targetHeading - heading) > 0? 4 : -4;
 
-	int leftSpeed = speed * (abs(turnTicks) - abs(leftPos));
-	int rightSpeed = -speed * (abs(turnTicks) - abs(rightPos));
-
-	/*int diffError = abs(leftPos) - abs(rightPos);
-	drive(leftSpeed - K * diffError, rightSpeed + K * diffError);*/
-
-	drive (leftSpeed, rightSpeed);
+	drive(speed * diff, -speed * diff);
 	return false;
 }

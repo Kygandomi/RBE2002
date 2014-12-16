@@ -68,5 +68,8 @@ void loop() {
 			if(completeTurn())
 				goTo(FORWARD);
 			break;
+		case STOP:
+			drive(0,0);
+			break;
 	}
 }

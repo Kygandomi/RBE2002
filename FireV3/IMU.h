@@ -21,3 +21,7 @@ void collectIMUData(){
 		heading = ToDeg(yaw);
 	}
 }
+
+void sumOfVectors(){
+	
+}

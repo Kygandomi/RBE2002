@@ -1,6 +1,8 @@
 void zeroEncoders(){
-  rightEnc.write(0);
-  leftEnc.write(0);
+	if(robotState != TURN)
+		sumOfVectors();
+	rightEnc.write(0);
+	leftEnc.write(0);
 }
 
 void EncoderSetup(){
