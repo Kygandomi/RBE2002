@@ -113,25 +113,26 @@ void setFlameServo(){
 
 void checkStopFindFlame(){
 	drive(0,0);
-	int lowestVal = analogRead(A1) + 100;
-	int lowestTilt = 40;
-	int lowestPan = 65;
 
-	for(float i = 25; i < 135; i+= .003){
-		pan.write(i);
-		if(analogRead(flameSensor) <= lowestVal){
-			lowestPan = i; 
-			lowestVal = analogRead(flameSensor);
-			if(lowestVal < 800){
-				flameExists = true;
+	const int minPos = 60;
+	const int maxPos = 100;
+	static int pos = minPos;
+	static unsigned long lastCallTime = millis();
+
+	if (pos <= maxPos){
+		pan.write(pos);	
+		if ((millis() - lastCallTime) < 50){
+			if(analogRead(flameSensor) < FLAME_THRESH){
+				goTo(FLAME);
 			}
 		}
-	}
-	
-	if(flameExists){
-		goTo(FLAME);
+		else{
+			lastCallTime = millis();
+			pos += 3;
+		}
 	}
 	else{
-		startTurn();
+		setFlameServo();
+		goTo(TURN);
 	}
 }
