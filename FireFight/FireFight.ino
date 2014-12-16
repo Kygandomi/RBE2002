@@ -30,14 +30,14 @@ void setup() {
 	initialReadings();
 	setDirection();
 	setFlameServo();
-	Serial.println("Start");
+	//Serial.println("Start");
 
 	initHeading = yaw;
 
 	Timer1.initialize(1000);
 	Timer1.attachInterrupt(sov);
 
-	Serial.println("Ok lets go...");
+	//Serial.println("Ok lets go...");
 	goTo(FORWARD);
 }
 
