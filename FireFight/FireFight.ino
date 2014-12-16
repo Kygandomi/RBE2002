@@ -6,13 +6,15 @@
 #include <L3G.h>
 #include <LSM303.h>
 
-#include "JuniorA.h"
-#include "PinglibA.h"
-#include "PingA.h"
-#include "IMUlibA.h"
-#include "IMUA.h"
-#include "WheelEncodersA.h"
-#include "FlameA.h"
+#include "Junior.h"
+#include "Pinglib.h"
+#include "Ping.h"
+#include "IMUlib.h"
+#include "IMU.h"
+#include "Encoders.h"
+#include "Flame.h"
+#include "Servos.h"
+#include "Navigation.h"
 
 void setup() {
 	Serial.begin(9600);
@@ -23,7 +25,7 @@ void setup() {
 	ServoSetup();
 
 	initialReadings();
-	dirTracking();
+	setDirection();
 	setFlameServo();
 
 	goTo(FORWARD);
@@ -34,13 +36,6 @@ void loop() {
 	collectIMUData();
 	pingAll();
 	setCurrPing();
-	Serial.print("IS FLAME FOUND: ");
-	Serial.println(isFlameFound);
-	Serial.print("IS FLAME DETECTED ONCE: ");
-	Serial.println(flameDetectedOnce);
-	Serial.print("cmLB: ");
-	Serial.println(cm[LB]);
-	//oneSensorCycle();
 
 	switch(robotState){
 		case FORWARD:
@@ -48,52 +43,50 @@ void loop() {
 			checkInitDist();
 			checkCliff();
 			//RESETER////////
-				if(trackingLeft){
-					if(cm[LB] < FAR_THRESH){
-					checkOpeningFirst = false;
+			if(trackingLeft){
+				if(cm[LB] < FAR_THRESH){
+					isOpening = false;
 					encDiff = 0;
 					isFirstDetect = false;
-					}
 				}
-				else{
-					if(cm[RB] < FAR_THRESH){
-					checkOpeningFirst = false;
+			}
+			else{
+				if(cm[RB] < FAR_THRESH){
+					isOpening = false;
 					encDiff = 0;
 					isFirstDetect = false;
-					}
 				}
+			}
 			///////////////
-			if(!checkOpeningFirst){
+			if(!isOpening){
 				checkForOpening();
 			}
-			if(checkOpeningFirst){
+			if(isOpening){
 				int currentEncAverage = (leftEnc.read() + rightEnc.read())/2;
 				if(trackingLeft){
 					if (currentEncAverage != initEncAverage && cm[LB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 300;
-						 if(initDist > FAR_THRESH && isFirstDetect){
-						  encDetect = 600;
-						  }
+						encDetect = 275;
+						if(initDist > FAR_THRESH && isFirstDetect){
+							encDetect = 800;
+						}
 					}
 				}
 				else{
 					if (currentEncAverage != initEncAverage && cm[RB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 300;
-						 if(initDist > FAR_THRESH && isFirstDetect){
-						 encDetect = 600;
-						 }
+						encDetect = 275;
+						if(initDist > FAR_THRESH && isFirstDetect){
+							encDetect = 800;
+						}
 					}
 				}
 
-				Serial.println("encDiff ");
-				Serial.println(encDiff);
 				if(encDiff > encDetect){
 					startTurnOpening();
 				}
 			}
-			checkSafety();
+			//checkSafety();
 			driveStraight();
 			checkFlameSensor();
 			break;
@@ -121,7 +114,7 @@ void loop() {
 			drive(0,0);
 			break;
 		case PAN_SENSOR:
-			checkFlameFront();
+			checkStopFindFlame();
 			break;		
 		default:
 			break;
@@ -129,6 +122,3 @@ void loop() {
 
 	setPrevPing();
 }
-
-
-

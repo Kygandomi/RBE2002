@@ -55,7 +55,7 @@ typedef enum State {
 State nextState, robotState;
 
 boolean trackingLeft;
-boolean checkOpeningFirst = false;
+boolean isOpening = false;
 boolean isFirstDetect = false;
 boolean isFirstOpen = true;
 
@@ -72,6 +72,7 @@ int encDiff;
 int encDetect;
 int turnTicks;
 int accumError = 0;
+int initBackUpEncAverage;
 
 int highestReading; 
 int highestEncAverage;
@@ -79,8 +80,8 @@ unsigned long initPanTime;
 unsigned long initGasTime;
 int flameStatus[3] = {0, 180, 180}; 
 
-void startTurn(boolean turnLeft);
-void startTurnOpening(boolean turnLeft);
+void startTurn();
+void startTurnOpening();
 void zeroEncoders();
 void pingAll();
 void collectIMUData();
@@ -90,35 +91,9 @@ void setPrevPing();
 void checkInitDist();
 void setFlameServo();
 int getEncAverage();
-
-void ServoSetup(){
-	leftM.attach(leftMPin);
-	rightM.attach(rightMPin);
-	pan.attach(panPin);
-	tilt.attach(tiltPin);
-	gas.attach(gasPin, 1000, 2000);
-}
-
-void drive(int x, int y){
-	x = (x>100)?100:(x<-100)?-100:x;
-	y = (y>100)?100:(y<-100)?-100:y;
-
-	if(x>0 && x<MIN_POWER)
-		x = MIN_POWER;
-	if(x<0 && x>-MIN_POWER)
-		x = -MIN_POWER;
-	if(y<0 && y>-MIN_POWER)
-		y = -MIN_POWER;
-	if(y>0 && y<MIN_POWER)
-		y = MIN_POWER;
-
-
-	int a = map(x, -100, 100, 1000, 2000);
-	int b = map(y, -100, 100, 2000, 1000);
-
-	leftM.writeMicroseconds(a);
-	rightM.writeMicroseconds(b);
-}
+void drive(int, int);
+void ServoSetup();
+void goTo(State);
 
 void initialReadings(){
 	long initTime = millis();
@@ -128,11 +103,17 @@ void initialReadings(){
 	}
 }
 
+void checkCliff(){
+	if(analogRead(cliffSensor) > 800){
+		initBackUpEncAverage = (leftEnc.read() + rightEnc.read())/2;
+		goTo(BACKUP);
+	}
+}
+
 void goTo(State s){
 	robotState = s;
 	switch(s){
 		case FORWARD:
-			flameDetectedOnce = true;
 			setFlameServo();
 			getInitDist();
 			zeroEncoders();
@@ -151,8 +132,6 @@ void goTo(State s){
 			break;
 		case PAN_SENSOR:
 			initPanTime = millis();
-			Serial.print("initPanTime: ");
-			Serial.println(initPanTime);
 			break;
 		case EXPLORE:
 			break;

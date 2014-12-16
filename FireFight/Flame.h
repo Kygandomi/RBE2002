@@ -1,44 +1,14 @@
 #ifndef Flame_H
 #define Flame_H
-#define flameThreshold 900
+#define flameThreshold 800
 
 void checkFlameSensor(){
 	if(flameDetectedOnce){
 	isFlameFound = analogRead(flameSensor) < flameThreshold;
-	Serial.print("FlameSensor: ");
-	Serial.println(analogRead(flameSensor));
 		if(isFlameFound){
-			Serial.print("FlameSensor: ");
-			Serial.println(analogRead(flameSensor));
 			flameDetectedOnce = false;
 			goTo(FORWARD);
 		} 
-}
-}
-
-void checkStopFindFlame(){
-	const int minX = 50;
-	const int maxX = 110;
-	static int posX = minX;
-
-	if(posX <= maxX){
-		static unsigned long lastCallTime;
-		pan.write(posX);
-		if ((millis() - lastCallTime) > 70){
-			lastCallTime = millis();
-		}
-		else{
-			int tempReading = (analogRead(A1));
-			if (tempReading < flameThreshold){
-				goTo(FLAME);
-			}
-			else{
-				posX += 3;
-			}
-		}
-	}
-	else{
-		goTo(TURN);
 	}
 }
 
@@ -92,7 +62,7 @@ bool findFlame(){
 		if (posX >= maxX){
 			posX = minX;
 			delay(100);
-			posY += 6;
+			posY += 8;
 		}
 
 		int tempReading = (analogRead(A1));
@@ -106,14 +76,14 @@ bool findFlame(){
 		if(posY >= maxY){
 			posY = maxY;
 			pan.write(finalX);
-			tilt.write(finalY);
+			tilt.write(finalY+5);
 			delay(1000);
 			return true;
 		}
 
 
 		tilt.write(posY);
-		posX += 3;
+		posX += 4;
 		pan.write(posX);
 		return false;
 	}
@@ -126,11 +96,9 @@ void checkFlameFront(){
 		goTo(FLAME);
 	}
 
-	Serial.println(millis() - initPanTime);
 	if(millis() - initPanTime > 400){
 		setFlameServo();
 		startTurn();
-		goTo(TURN);
 	} 
 
 }
@@ -145,6 +113,30 @@ void setFlameServo(){
 	else{
 		//else we're tracking right, set sensor to face left
 		pan.write(30);
+	}
+}
+void checkStopFindFlame(){
+	drive(0,0);
+	int lowestVal = analogRead(A1) + 100;
+	int lowestTilt = 40;
+	int lowestPan = 65;
+
+	for(float i = 25; i < 135; i+= .003){
+		pan.write(i);
+		if(analogRead(flameSensor) <= lowestVal){
+			lowestPan = i; 
+			lowestVal = analogRead(flameSensor);
+			if(lowestVal < 800){
+				flameExists = true;
+			}
+		}
+	}
+	
+	if(flameExists){
+		goTo(FLAME);
+	}
+	else{
+		startTurn();
 	}
 }
 //pan values for flame sensor

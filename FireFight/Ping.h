@@ -1,7 +1,12 @@
 void checkStop(){
 	if(cm[LF] < FRONT_THRESH || cm[RF] < FRONT_THRESH || cm[MF] < FRONT_THRESH){
 		drive(0, 0);
-		goTo(PAN_SENSOR);
+		if(!flameDetectedOnce){
+			goTo(PAN_SENSOR);
+		}
+		else{
+		startTurn();
+	}
 	}
 }
 void checkInitDist(){
@@ -10,28 +15,20 @@ void checkInitDist(){
 			isFirstDetect = true;
 			isFirstOpen = false;
 		}
-}
+	}
 }
 void checkForOpening(){
 	int measurement = trackingLeft? currLB : currRB;
 	if(measurement > FAR_THRESH){
 		initEncAverage = (leftEnc.read() + rightEnc.read())/2;
-		Serial.print("initEncAverage ");
-		Serial.println(initEncAverage);
-		Serial.print("CALCULATING prevLB ");
-		Serial.println(prevLB);
 		endDist = trackingLeft? prevLB : prevRB;
-		checkOpeningFirst = true;
-		//startTurnOpening(trackingLeft);
-		//goTo(FORWARD_TIMED); then(EXPLORE);
-		Serial.print(" WE USE THIS ONE " );
-		Serial.println(endDist);
+		isOpening = true;
 	}
 }
 
 void checkSafety(){
 	if(trackingLeft){
-		if(checkOpeningFirst){
+		if(isOpening){
 			if (cm[LB] == prevLB){
 				accumError += 0;
 			}
@@ -44,7 +41,7 @@ void checkSafety(){
 		}		
 	}
 	else {
-		if(checkOpeningFirst){
+		if(isOpening){
 			if(cm[RB] == prevRB){
 				accumError += 0;
 			}
@@ -58,7 +55,7 @@ void checkSafety(){
 	}	
 }
 
-void dirTracking(){
+void setDirection(){
 	trackingLeft = (cm[LB] < cm[RB]);
 }
 

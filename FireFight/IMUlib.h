@@ -115,7 +115,7 @@ void IMUSetup()
 {
 	I2C_Init();
 
-	//delay(1000);
+	delay(1000);
 
 	Accel_Init();
 	Gyro_Init();
