@@ -33,11 +33,15 @@ void VectorSetup(){
 
 void sov(){
 	if(!blockSOV){
-		float linDiff = ((leftEnc.read()+rightEnc.read()) / 32.8) - prevLinDis;
-		int currentAngDis = initHeading - yaw;
+		double linDiff = ((leftEnc.read()+rightEnc.read()) / 32.8) - prevLinDis;
+		double currentAngDis = initHeading - yaw;
 
-		xDis += linDiff * sin(currentAngDis);
-		yDis += linDiff * cos(currentAngDis);
+		xDis += linDiff * cos(currentAngDis);
+		yDis += linDiff * sin(currentAngDis);
+
+		Serial.print(cos(currentAngDis));
+		Serial.print("    ");
+		Serial.println(sin(currentAngDis));
 
 		prevLinDis += linDiff;
 	}

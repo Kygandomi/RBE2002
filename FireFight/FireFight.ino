@@ -31,7 +31,6 @@ void setup() {
 	setDirection();
 	setFlameServo();
 
-	Serial.println("Start");
 	VectorSetup();
 	goTo(FORWARD);
 }
@@ -41,10 +40,6 @@ void loop() {
 	collectIMUData();
 	pingAll();
 	setCurrPing();
-	Serial.print("left: ");
-	Serial.println(leftEnc.read());
-	Serial.print("right: ");
-	Serial.println(rightEnc.read());
 
 	switch(robotState){
 		case FORWARD:
