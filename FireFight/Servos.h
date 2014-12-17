@@ -6,7 +6,7 @@ void ServoSetup(){
 	gas.attach(gasPin, 1000, 2000);
 }
 
-void drive(int x, int y){
+void drive(int x, int y){ //this enables us to tell the servos to drive in an intuitive way - as a percentage rather than degree from 90 - also mapped so positive is forward!
 	if(x>100)
 		x = 100;
 	else if(x<-100)

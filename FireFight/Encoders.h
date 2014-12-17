@@ -11,10 +11,10 @@ void EncoderSetup(){
 }
 
 int getEncAvg(){
-	return (leftEnc.read() + rightEnc.read()) / 2;
+	return (leftEnc.read() + rightEnc.read()) / 2; //return average encoder displacement
 }
 
-double distanceTraveled(){
+double distanceTraveled(){ //how far have we traveled?
 	int encAverage = getEncAvg();
 	double toCM = encAverage / TICKS_CM;
 	return toCM;

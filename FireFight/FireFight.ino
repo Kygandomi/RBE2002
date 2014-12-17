@@ -56,7 +56,7 @@ void loop() {
 			if(checkCliff()) //don't go over a cliff!
 				goTo(BACKUP);
 			
-			if(getSideDist() < FAR_THRESH){ //Reset false values that may be from noise
+			if(getSideDist() < FAR_THRESH){ //nothing to explore
 				isOpening = false;
 				encDiff = 0;
 				isFirstDetect = false;
