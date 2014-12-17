@@ -75,7 +75,7 @@ void loop() {
 				if(trackingLeft){
 					if(currentEncAverage != initEncAverage && cm[LB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 275;
+						encDetect = 300;
 						if(initDist > FAR_THRESH && isFirstDetect){
 							encDetect = 800;
 						}
@@ -84,7 +84,7 @@ void loop() {
 				else{
 					if(currentEncAverage != initEncAverage && cm[RB] > FAR_THRESH){
 						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 275;
+						encDetect = 300;
 						if(initDist > FAR_THRESH && isFirstDetect){
 							encDetect = 800;
 						}
@@ -124,9 +124,9 @@ void loop() {
 			xDis += 30 * cos(ToRad(heading));
 			yDis += 30 * sin(ToRad(heading));
 			lcd.print("X: ");
-			lcd.print(xDis);
+			lcd.print(xDis / 2.5);
 			lcd.print("Y: ");
-			lcd.print(yDis);
+			lcd.print(yDis / 2.5);
 			lcd.setCursor(0,1);
 			lcd.print(heading);
 			while(1);

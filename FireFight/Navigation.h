@@ -84,31 +84,28 @@ void driveStraight(){
 	int rightEncTick = rightEnc.read();
 	int Kp = 2;
 	
-	if(trackingLeft){
-			if (cm[LB] == prevLB  || cm[LB] > FAR_THRESH || prevLB > FAR_THRESH){
-				accumError += 0;
-			}
-			else if(cm[LB] > prevLB){
-				accumError += 25;
-			}
-			else if(cm[LB] < prevLB){
-				accumError += -25;
-			}
-	}
-	else {
 			if(cm[RB] == prevRB || cm[RB] > FAR_THRESH || prevRB > FAR_THRESH){
 				accumError += 0;
 			}
 			else if(cm[RB] > prevRB){
-				accumError += -25;
+				accumError += -30;
 			}
 			else if(cm[RB] < prevRB){
-				accumError += 25;
+				accumError += 30;
 			}
-	}
+			if (cm[LB] == prevLB  || cm[LB] > FAR_THRESH || prevLB > FAR_THRESH){
+				accumError += 0;
+			}
+			else if(cm[LB] > prevLB){
+				accumError += 30;
+			}
+			else if(cm[LB] < prevLB){
+				accumError += -30;
+			}
+
 
 	int Eerror = leftEncTick - rightEncTick;
 	int totError = Eerror + accumError;
 
-	drive(40 - K*totError - Kp*Rerror, 40 + K*totError + Kp*Rerror);
+	drive(50 - K*totError - Kp*Rerror, 50 + K*totError + Kp*Rerror);
 }
