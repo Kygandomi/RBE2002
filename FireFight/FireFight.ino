@@ -1,4 +1,5 @@
 // FireFight.ino
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
 #include <Servo.h>
 #include <Encoder.h>
 #include <NewPing.h>

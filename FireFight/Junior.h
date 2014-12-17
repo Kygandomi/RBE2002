@@ -1,3 +1,4 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
 /* CONSTANT DEFINITIONS */
 
 /* PINS */

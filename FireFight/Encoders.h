@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 void zeroEncoders(){
 	rightEnc.write(0);
 	leftEnc.write(0);

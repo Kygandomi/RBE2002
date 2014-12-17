@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 int getSideDist(){
 	return trackingLeft? cm[LB] : cm[RB]; //return distance to side wall
 }

@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 void collectIMUData(){
 	int interval = millis() - timer;
 	if(interval > 19){ // Main loop runs at 50Hz

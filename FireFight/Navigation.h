@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 void startTurnOpening(){ 
 	float error = asin((endDist - initDist) / initDistanceTraveled());
 	float errTicks = DEG_TICKS * ToDeg(error);

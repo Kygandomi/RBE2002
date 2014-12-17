@@ -1,3 +1,5 @@
+/* This example code was taken from the NewPing library examples */
+
 #define SONAR_NUM     5 // Number of sensors.
 #define MAX_DISTANCE  300 // Maximum distance (in cm) to ping.
 #define PING_INTERVAL 50 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).

@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 bool checkCliff(){
 	if(analogRead(cliffSensor) > 800){ //check light sensor
 		initBackUpEncAverage = getEncAvg();

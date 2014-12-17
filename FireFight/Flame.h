@@ -1,3 +1,5 @@
+/* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 bool checkFlameSensor(){
 	if(flameDetectedOnce){
 		isFlameFound = analogRead(flameSensor) < FLAME_THRESH;
