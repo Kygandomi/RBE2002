@@ -38,9 +38,9 @@ void collectIMUData(){
 }
 
 void VectorSetup(){
-	lcd.begin(16, 2);
+	//lcd.begin(16, 2);
 }
-
+/*
 void sumOfVectors(){
 	int linDiff = ((leftEnc.read()+rightEnc.read()) / 33); // - prevLinDis;
 	float currentAngDis = ToRad(heading); //initHeading - yaw;
@@ -48,3 +48,4 @@ void sumOfVectors(){
 	xDis += linDiff * cos(currentAngDis);
 	yDis += linDiff * sin(currentAngDis);
 }
+*/

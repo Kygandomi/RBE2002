@@ -3,7 +3,7 @@ void checkFlameSensor(){
 		isFlameFound = analogRead(flameSensor) < FLAME_THRESH;
 		if(isFlameFound){
 			flameDetectedOnce = false;
-			setLed(FLASH);
+			//setLed(FLASH);
 			goTo(FORWARD);
 		} 
 	}

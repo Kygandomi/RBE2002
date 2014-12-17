@@ -9,7 +9,7 @@ void checkCliff(){
 
 void goTo(State s){
 	if(robotState == FORWARD)
-		sumOfVectors();
+		//sumOfVectors();
 	robotState = s;
 	switch(s){
 		case FORWARD:
@@ -28,7 +28,7 @@ void goTo(State s){
 		case REROUTE:
 			break;
 		case STOP:
-			setLed(GREEN);
+			//setLed(GREEN);
 			break;
 		case PAN_SENSOR:
 			initPanTime = millis();
@@ -39,7 +39,7 @@ void goTo(State s){
 			break;
 	}
 }
-
+/*
 void setLed(Color newState){
 	ledState = newState;
 	switch(ledState){
@@ -63,6 +63,7 @@ void setLed(Color newState){
 	}
 }
 
+
 void updateLed(){
 	if(ledState == FLASH) if(millis() - ledTimer > 50){
 		cRGB nullValues;
@@ -75,3 +76,4 @@ void updateLed(){
 		ledTimer = millis();
 	}
 }
+*/

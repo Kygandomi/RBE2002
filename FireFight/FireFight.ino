@@ -6,8 +6,8 @@
 #include <L3G.h>
 #include <LSM303.h>
 #include <TimerOne.h>
-#include <LiquidCrystal.h>
-#include <WS2812.h>
+//#include <LiquidCrystal.h>
+//#include <WS2812.h>
 
 #include "Junior.h"
 #include "Pinglib.h"
@@ -20,11 +20,11 @@
 #include "Navigation.h"
 #include "Extra.h"
 
-long lcdTimer;
+//long lcdTimer;
 
 void setup() {
-	LED.setOutput(LEDPIN);
-	setLed(GREEN);
+	//LED.setOutput(LEDPIN);
+	//setLed(GREEN);
 	Serial.begin(9600);
 	IMUSetup();
 	PingSetup();
@@ -36,7 +36,7 @@ void setup() {
 	setFlameServo();
 
 	VectorSetup();
-	setLed(PURPLE);
+	//setLed(PURPLE);
 	Serial.println("START");
 	goTo(FORWARD);
 }
@@ -123,12 +123,12 @@ void loop() {
 			drive(0,0);
 			xDis += 30 * cos(ToRad(heading));
 			yDis += 30 * sin(ToRad(heading));
-			lcd.print("X: ");
-			lcd.print(xDis / 2.5);
-			lcd.print("Y: ");
-			lcd.print(yDis / 2.5);
-			lcd.setCursor(0,1);
-			lcd.print(heading);
+			//lcd.print("X: ");
+			//lcd.print(xDis / 2.5);
+			//lcd.print("Y: ");
+			//lcd.print(yDis / 2.5);
+			//lcd.setCursor(0,1);
+			//lcd.print(heading);
 			while(1);
 			break;
 		case PAN_SENSOR:
@@ -149,6 +149,6 @@ void loop() {
 	// 	lcdTimer = millis();
 	// }
 
-	updateLed();
+	//updateLed();
 	setPrevPing();
 }
