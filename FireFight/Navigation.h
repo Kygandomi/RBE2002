@@ -97,10 +97,10 @@ void driveStraight(){
 				accumError += 0;
 			}
 			else if(cm[LB] > prevLB){
-				accumError += 30;
+				accumError += 35;
 			}
 			else if(cm[LB] < prevLB){
-				accumError += -30;
+				accumError += -35;
 			}
 
 

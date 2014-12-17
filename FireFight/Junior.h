@@ -34,7 +34,7 @@
 #define FRONT_THRESH 13
 #define NEAR_THRESH 10
 
-#define ENCODER_TARGET 310
+#define ENCODER_TARGET 305
 #define FLAME_THRESH 800
 
 /* OBJECTS */

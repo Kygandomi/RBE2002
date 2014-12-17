@@ -124,9 +124,9 @@ void loop() {
 			xDis += 30 * cos(ToRad(heading));
 			yDis += 30 * sin(ToRad(heading));
 			lcd.print("X: ");
-			lcd.print(xDis / 2.5);
+			lcd.print(xDis);
 			lcd.print("Y: ");
-			lcd.print(yDis / 2.5);
+			lcd.print(yDis);
 			lcd.setCursor(0,1);
 			lcd.print(heading);
 			while(1);

@@ -100,7 +100,7 @@ void checkFlameFront(){
 }
 
 void setFlameServo(){
-	tilt.write(100);
+	tilt.write(90);
 	if(trackingLeft){
 		//if we're tracking left, set sensor to face right
 		pan.write(140);
