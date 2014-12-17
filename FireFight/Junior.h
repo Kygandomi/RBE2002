@@ -94,11 +94,9 @@ void setCurrPing();
 void setPrevPing();
 
 /* IMU */
-bool blockSOV = false;
-float heading, initHeading;
-float prevLinDis;
-double xDis;
-double yDis;
+float heading =0;
+int xDis;
+int yDis;
 
 void collectIMUData();
 void sov();

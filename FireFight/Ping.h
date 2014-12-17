@@ -54,6 +54,12 @@ void checkSafety(){
 		}
 	}	
 }
+void initialReadings(){
+	long initTime = millis();
+	while(millis() - initTime < 3000){
+		pingAll();
+	}
+}
 
 void setDirection(){
 	trackingLeft = (cm[LB] < cm[RB]);

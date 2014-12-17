@@ -20,11 +20,12 @@
 #include "Navigation.h"
 #include "Extra.h"
 
+long lcdTimer;
+
 void setup() {
 	LED.setOutput(LEDPIN);
 	setLed(GREEN);
 	Serial.begin(9600);
-
 	IMUSetup();
 	PingSetup();
 	EncoderSetup();
@@ -35,13 +36,12 @@ void setup() {
 	setFlameServo();
 
 	VectorSetup();
-	goTo(FORWARD);
 	setLed(PURPLE);
+	Serial.println("START");
+	goTo(FORWARD);
 }
 
 void loop() {
-
-	collectIMUData();
 	pingAll();
 	setCurrPing();
 
@@ -102,6 +102,7 @@ void loop() {
 			driveBackwards();
 			break;	
 		case TURN:
+			collectIMUData();
 			completeTurn();
 			break;
 		case REROUTE:
@@ -120,10 +121,14 @@ void loop() {
 			break;
 		case STOP:
 			drive(0,0);
+			//xDis += 20 * cos(ToRad(heading));
+			//yDis += 20 * sin(ToRad(heading));
 			lcd.print("X: ");
 			lcd.print(xDis);
 			lcd.print("Y: ");
 			lcd.print(yDis);
+			lcd.setCursor(0,1);
+			lcd.print(heading);
 			while(1);
 			break;
 		case PAN_SENSOR:
@@ -133,6 +138,21 @@ void loop() {
 			break;
 	}
 
+	// if(millis() - lcdTimer > 1000){
+	// 	lcd.setCursor(0,0);
+	// 	lcd.print("X: ");
+	// 	lcd.print(xDis);
+	// 	lcd.print("Y: ");
+	// 	lcd.print(yDis);
+	// 	lcd.setCursor(0,1);
+	// 	lcd.print(heading);
+	// 	lcdTimer = millis();
+	// }
+
 	updateLed();
 	setPrevPing();
+	if(millis() - timer > 19)
+	{
+		timer = millis();
+	}
 }

@@ -77,22 +77,22 @@ void driveStraight(){
 		}
 	}
 	int Rerror = cm[LF] - cm[RF]; 
-		if(Rerror > 10 || Rerror < -10){
-			Rerror = 0;
-		}
-		int leftEncTick = leftEnc.read();
-		int rightEncTick = rightEnc.read();
-		 int Kp = 2;
+	if(Rerror > 10 || Rerror < -10){
+		Rerror = 0;
+	}
+	int leftEncTick = leftEnc.read();
+	int rightEncTick = rightEnc.read();
+	int Kp = 2;
 	
 	if(trackingLeft){
 			if (cm[LB] == prevLB  || cm[LB] > FAR_THRESH || prevLB > FAR_THRESH){
 				accumError += 0;
 			}
 			else if(cm[LB] > prevLB){
-				accumError += 20;
+				accumError += 25;
 			}
 			else if(cm[LB] < prevLB){
-				accumError += -20;
+				accumError += -25;
 			}
 	}
 	else {
@@ -100,15 +100,15 @@ void driveStraight(){
 				accumError += 0;
 			}
 			else if(cm[RB] > prevRB){
-				accumError += -20;
+				accumError += -25;
 			}
 			else if(cm[RB] < prevRB){
-				accumError += 20;
+				accumError += 25;
 			}
 	}
 
 	int Eerror = leftEncTick - rightEncTick;
 	int totError = Eerror + accumError;
 
-	drive(70 - K*totError - Kp*Rerror, 70 + K*totError + Kp*Rerror);
+	drive(40 - K*totError - Kp*Rerror, 40 + K*totError + Kp*Rerror);
 }

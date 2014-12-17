@@ -1,5 +1,4 @@
 void zeroEncoders(){
-	prevLinDis = 0;
 	rightEnc.write(0);
 	leftEnc.write(0);
 }

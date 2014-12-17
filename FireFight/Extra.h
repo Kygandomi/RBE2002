@@ -1,10 +1,4 @@
-void initialReadings(){
-	long initTime = millis();
-	while(millis() - initTime < 3000){
-		pingAll();
-		collectIMUData();
-	}
-}
+
 
 void checkCliff(){
 	if(analogRead(cliffSensor) > 800){
@@ -14,16 +8,16 @@ void checkCliff(){
 }
 
 void goTo(State s){
+	if(robotState == FORWARD)
+		sov();
 	robotState = s;
 	switch(s){
 		case FORWARD:
-			blockSOV = false;
 			setFlameServo();
 			getInitDist();
 			zeroEncoders();
 			break;
 		case TURN:
-			blockSOV = true;
 			zeroEncoders();
 			break;
 		case BACKUP:
@@ -42,7 +36,6 @@ void goTo(State s){
 		case EXPLORE:
 			break;
 		case FLAME:
-			setLed(FLASH);
 			break;
 	}
 }
