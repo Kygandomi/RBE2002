@@ -1,42 +1,34 @@
 void startTurnOpening(){ 
 	float error = asin((endDist - initDist) / initDistanceTraveled());
-	float errTicks = 3.36 * ToDeg(error);
-	if(initDist > FAR_THRESH){
+	float errTicks = DEG_TICKS * ToDeg(error);
+	if(initDist > FAR_THRESH)
 		errTicks = 0;
-	}
 
 	turnTicks = trackingLeft? -ENCODER_TARGET : ENCODER_TARGET;
 	turnTicks += trackingLeft? errTicks : -errTicks;
-
-	goTo(TURN);
 }
 
 void startTurn(){
 	getFinalDist();
 
 	float error = asin((finalDist - initDist) / distanceTraveled());
-	float errTicks = 3.36 * ToDeg(error);
-	if(initDist > FAR_THRESH){
+	float errTicks = DEG_TICKS * ToDeg(error);
+	if(initDist > FAR_THRESH)
 		errTicks = 0;
-	}
 
 	turnTicks = trackingLeft? ENCODER_TARGET : -ENCODER_TARGET;
 	turnTicks += trackingLeft? -errTicks : errTicks;
-	
-	goTo(TURN); 
+
 	accumError = 0;
 }
 
-void completeTurn(){
+bool completeTurn(){
 	int leftPos = leftEnc.read(), rightPos = rightEnc.read();
 
 	if(abs(leftPos - turnTicks) < 10 && abs(rightPos + turnTicks) < 10){
-		drive(0, 0);
 		isOpening = false;
 		encDiff = 0;
-		isFirstOpen = true;
-		goTo(FORWARD);
-		return;
+		return true;
 	}
 
 	float speed = turnTicks > 0? 1.5 : -1.5;
@@ -44,68 +36,40 @@ void completeTurn(){
 	int leftSpeed = speed * (abs(turnTicks) - abs(leftPos));
 	int rightSpeed = -speed * (abs(turnTicks) - abs(rightPos));
 
-	/*int diffError = abs(leftPos) - abs(rightPos);
-	drive(leftSpeed - K * diffError, rightSpeed + K * diffError);*/
-
 	drive (leftSpeed, rightSpeed);
+	return false;
 }
 
-void driveBackwards(){
-	int leftEncTick = leftEnc.read();
-		int rightEncTick = rightEnc.read();
-		int Eerror = leftEncTick - rightEncTick;
-		int currentEncAverage = (leftEnc.read() + rightEnc.read())/2;
-		if(currentEncAverage - initBackUpEncAverage < -80){
-			drive(0, 0);
-			goTo(REROUTE);
-		}
+bool driveBackwards(){
+	int encError = leftEnc.read() - rightEnc.read();
+	if(getEncAvg() - initBackUpEncAverage < -80)
+		return true;
 
-	drive(-50 - K*Eerror, -50 + K*Eerror);
+	drive(-50 - K*encError, -50 + K*encError);
+	return false;
 }
 
-void driveStraight(){
-	if(isFlameFound){
-		if(trackingLeft){
-			if(cm[RB] < 50){
-				startTurn();
-			}
-		}
-		else{
-			if(cm[LB] < 50){
-				startTurn();
-			}
-		}
-	}
-	int Rerror = cm[LF] - cm[RF]; 
-	if(Rerror > 10 || Rerror < -10){
-		Rerror = 0;
-	}
-	int leftEncTick = leftEnc.read();
-	int rightEncTick = rightEnc.read();
-	int Kp = 2;
+bool driveStraight(){
+	if(isFlameFound && getSideDist() < 50)
+		return false;
+
+	int sonarError = cm[LF] - cm[RF]; 
+	if(abs(sonarError) > 10)
+		sonarError = 0;
+	sonarError *= 2;
 	
-			if(cm[RB] == prevRB || cm[RB] > FAR_THRESH || prevRB > FAR_THRESH){
-				accumError += 0;
-			}
-			else if(cm[RB] > prevRB){
-				accumError += -30;
-			}
-			else if(cm[RB] < prevRB){
-				accumError += 30;
-			}
-			if (cm[LB] == prevLB  || cm[LB] > FAR_THRESH || prevLB > FAR_THRESH){
-				accumError += 0;
-			}
-			else if(cm[LB] > prevLB){
-				accumError += 35;
-			}
-			else if(cm[LB] < prevLB){
-				accumError += -35;
-			}
+	if(cm[RB] > prevRB)
+		accumError += -30;
+	else if(cm[RB] < prevRB)
+		accumError += 30;
+	if(cm[LB] > prevLB)
+		accumError += 30;
+	else if(cm[LB] < prevLB)
+		accumError += -30;
 
+	int encError = leftEnc.read() - rightEnc.read();
+	int totalError = encError + accumError;
 
-	int Eerror = leftEncTick - rightEncTick;
-	int totError = Eerror + accumError;
-
-	drive(50 - K*totError - Kp*Rerror, 50 + K*totError + Kp*Rerror);
+	drive(50 - K * totalError - sonarError, 50 + K * totalError + sonarError);
+	return true;
 }

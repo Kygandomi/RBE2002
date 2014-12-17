@@ -1,12 +1,13 @@
-void checkFlameSensor(){
+bool checkFlameSensor(){
 	if(flameDetectedOnce){
 		isFlameFound = analogRead(flameSensor) < FLAME_THRESH;
 		if(isFlameFound){
 			flameDetectedOnce = false;
 			setLed(FLASH);
-			goTo(FORWARD);
+			return true;
 		} 
 	}
+	return false;
 }
 
 int limit(int value){
@@ -24,22 +25,17 @@ void setTarget(int target){
 	gas.write(value);
 }
 
-void putOutFlame(){
-
-	if(millis() - initGasTime < 1000){
+bool putOutFlame(){
+	if(millis() - initGasTime < 1000)
 		setTarget(770);
-	}
-	else if(millis() - initGasTime < 2000){
+	else if(millis() - initGasTime < 2000)
 		setTarget(350);
-	}
-	else {
-		goTo(STOP);
-	}
-
+	else
+		return true;
+	return false;
 }
 
 bool findFlame(){
-
 	const int minX = 30;
 	const int minY = 60;
 	const int maxX = 120;
@@ -77,7 +73,6 @@ bool findFlame(){
 			return true;
 		}
 
-
 		tilt.write(posY);
 		posX += 3;
 		pan.write(posX);
@@ -85,34 +80,12 @@ bool findFlame(){
 	}
 }
 
-void checkFlameFront(){
-	pan.write(80);
-	if(analogRead(flameSensor) < FLAME_THRESH){
-		drive(0,0);
-		goTo(FLAME);
-	}
-
-	if(millis() - initPanTime > 400){
-		setFlameServo();
-		startTurn();
-	} 
-
-}
-
 void setFlameServo(){
 	tilt.write(90);
-	if(trackingLeft){
-		//if we're tracking left, set sensor to face right
-		pan.write(140);
-	}
-
-	else{
-		//else we're tracking right, set sensor to face left
-		pan.write(30);
-	}
+	pan.write(trackingLeft? 140 : 30);
 }
 
-void checkStopFindFlame(){
+bool checkStopFindFlame(){
 	drive(0,0);
 	int lowestVal = analogRead(A1) + 100;
 	int lowestTilt = 40;
@@ -123,16 +96,10 @@ void checkStopFindFlame(){
 		if(analogRead(flameSensor) <= lowestVal){
 			lowestPan = i; 
 			lowestVal = analogRead(flameSensor);
-			if(lowestVal < 800){
+			if(lowestVal < 800)
 				flameExists = true;
-			}
 		}
 	}
 	
-	if(flameExists){
-		goTo(FLAME);
-	}
-	else{
-		startTurn();
-	}
+	return flameExists;
 }

@@ -1,24 +1,19 @@
-void checkStop(){
+int getSideDist(){
+	return trackingLeft? cm[LB] : cm[RB];
+}
+
+bool checkStop(){
 	if(cm[LF] < FRONT_THRESH || cm[RF] < FRONT_THRESH || cm[MF] < FRONT_THRESH){
-		drive(0, 0);
-		if(!flameDetectedOnce){
+		if(!flameDetectedOnce)
 			goTo(PAN_SENSOR);
-		}
-		else{
-			startTurn();
-		}
+		else
+			return true;
 	}
+	return false;
 }
-void checkInitDist(){
-	if(isFirstOpen){
-		if(initDist > FAR_THRESH){
-			isFirstDetect = true;
-			isFirstOpen = false;
-		}
-	}
-}
+
 void checkForOpening(){
-	int measurement = trackingLeft? currLB : currRB;
+	int measurement = getSideDist();
 	if(measurement > FAR_THRESH){
 		initEncAverage = (leftEnc.read() + rightEnc.read())/2;
 		endDist = trackingLeft? prevLB : prevRB;
@@ -26,39 +21,10 @@ void checkForOpening(){
 	}
 }
 
-void checkSafety(){
-	if(trackingLeft){
-		if(isOpening){
-			if (cm[LB] == prevLB){
-				accumError += 0;
-			}
-			else if(cm[LB] > 16){
-				accumError += 10;
-			}
-			else if(cm[LB] < 14){
-				accumError += -10;
-			}
-		}		
-	}
-	else {
-		if(isOpening){
-			if(cm[RB] == prevRB){
-				accumError += 0;
-			}
-			else if(cm[RB] > 16){
-				accumError += -10;
-			}
-			else if(cm[RB] < 14){
-				accumError += 10;
-			}
-		}
-	}	
-}
 void initialReadings(){
 	long initTime = millis();
-	while(millis() - initTime < 3000){
+	while(millis() - initTime < 3000)
 		pingAll();
-	}
 }
 
 void setDirection(){
@@ -66,22 +32,18 @@ void setDirection(){
 }
 
 void getInitDist(){
-	initDist = trackingLeft? cm[LB] : cm[RB];
+	initDist = getSideDist();
+	if(initDist > FAR_THRESH)
+		isFirstDetect = true;
 }
 
 void getFinalDist(){
-	finalDist = trackingLeft? cm[LB] : cm[RB];
+	finalDist = getSideDist();
 }
 
 void pingAll(){
-	for(int i = 0; i < SONAR_NUM; i++)
-		pingingSensors(i);
-}
-void setCurrPing(){
-	currLB = cm[LB];
-	currRB = cm[RB];
-}
-void setPrevPing(){
 	prevLB = cm[LB];
 	prevRB = cm[RB];
+	for(int i = 0; i < SONAR_NUM; i++)
+		pingingSensors(i);
 }

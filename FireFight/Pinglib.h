@@ -7,8 +7,6 @@ unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 float prevLB = 6;
 float prevRB = 6;
-float currLB;
-float currRB;
 
 NewPing sonar[SONAR_NUM] = {     // Sensor object array.
 	NewPing(lBackI, lBackO, MAX_DISTANCE),
@@ -22,16 +20,6 @@ NewPing sonar[SONAR_NUM] = {     // Sensor object array.
 void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer())
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
-}
-
-void oneSensorCycle() { // Sensor ping cycle complete, do something with the results.
-	for (uint8_t i = 0; i < SONAR_NUM; i++) {
-		Serial.print(i);
-		Serial.print("=");
-		Serial.print(cm[i]);
-		Serial.print("cm ");
-	}
-	Serial.println();
 }
 
 void pingingSensors(int x){

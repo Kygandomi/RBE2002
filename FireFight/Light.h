@@ -1,43 +1,9 @@
-
-
-void checkCliff(){
+bool checkCliff(){
 	if(analogRead(cliffSensor) > 800){
-		initBackUpEncAverage = (leftEnc.read() + rightEnc.read())/2;
-		goTo(BACKUP);
+		initBackUpEncAverage = getEncAvg();
+		return true;
 	}
-}
-
-void goTo(State s){
-	if(robotState == FORWARD)
-		sumOfVectors();
-	robotState = s;
-	switch(s){
-		case FORWARD:
-			setFlameServo();
-			getInitDist();
-			zeroEncoders();
-			break;
-		case TURN:
-			zeroEncoders();
-			break;
-		case BACKUP:
-			break;
-		case PUT_OUT_FLAME:
-			initGasTime = millis();
-			break;		
-		case REROUTE:
-			break;
-		case STOP:
-			setLed(GREEN);
-			break;
-		case PAN_SENSOR:
-			initPanTime = millis();
-			break;
-		case EXPLORE:
-			break;
-		case FLAME:
-			break;
-	}
+	return false;
 }
 
 void setLed(Color newState){
@@ -56,9 +22,8 @@ void setLed(Color newState){
 			ledValues.b = 0; ledValues.r = 50; ledValues.g = 0;
 	}
 	if(ledState != FLASH){
-		for(uint8_t i = 0; i < LEDNUM; i++){
+		for(uint8_t i = 0; i < LEDNUM; i++)
 			LED.set_crgb_at(i, ledValues);
-		}
 		LED.sync();
 	}
 }
@@ -67,9 +32,8 @@ void updateLed(){
 	if(ledState == FLASH) if(millis() - ledTimer > 50){
 		cRGB nullValues;
 		nullValues.b = 0; nullValues.r = 0; nullValues.g = 0;
-		for(uint8_t i = 0; i < LEDNUM; i++){
+		for(uint8_t i = 0; i < LEDNUM; i++)
 			LED.set_crgb_at(i, i%2==ledPhase? ledValues : nullValues);
-		}
 		LED.sync();
 		ledPhase = !ledPhase;
 		ledTimer = millis();

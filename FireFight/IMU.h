@@ -1,50 +1,32 @@
 void collectIMUData(){
-	// if((millis() - timer) > 19){
-	// 	counter++;
-	// 	G_Dt = abs(millis() - timer)/1000.0;
-	// 	timer=millis();
-
-	// 	Read_Gyro();
-	// 	Read_Accel();
-
-	// 	if (counter > 5){
-	// 		counter=0;
-	// 		Read_Compass();
-	// 		Compass_Heading();
-	// 	}
-
-	// 	Matrix_update(); 
-	// 	Normalize();
-	// 	Drift_correction();
-	// 	Euler_angles();
-
-	// 	heading = ToDeg(yaw);
-	// }
 	int interval = millis() - timer;
-	if(interval > 19) // Main loop runs at 50Hz
-	{
-		counter++;
+	if(interval > 19){ // Main loop runs at 50Hz
 		G_Dt = interval / 1000.0; // Real time of loop run. We use this on the DCM algorithm (gyro integration time)
 		timer = millis();
 
 		Read_Gyro(); // This read gyro data
 		Read_Accel(); // Read I2C accelerometer
 
-		if(robotState == TURN)
+		if(robotState == TURN) //only count gyro data when turning (very little drift!)
 			heading += gyro_z * G_Dt * 0.07;
-
-		//Serial.println(heading);
 	}
 }
 
 void VectorSetup(){
+	//set up the lcd and set all variables to 0
 	lcd.begin(16, 2);
+	lcd.setCursor(0, 0);
+	xDis = 0;
+	yDis = 0;
+	heading = 0;
 }
 
 void sumOfVectors(){
-	int linDiff = ((leftEnc.read()+rightEnc.read()) / 33); // - prevLinDis;
-	float currentAngDis = ToRad(heading); //initHeading - yaw;
+	//get current displacement
+	int linDiff = getEncAvg() / TICKS_CM;
+	float currentAngDis = ToRad(heading);
 
+	//get vector components
 	xDis += linDiff * cos(currentAngDis);
 	yDis += linDiff * sin(currentAngDis);
 }

@@ -10,13 +10,17 @@ void EncoderSetup(){
 	pinMode(19, INPUT_PULLUP);
 }
 
+int getEncAvg(){
+	return (leftEnc.read() + rightEnc.read()) / 2;
+}
+
 double distanceTraveled(){
-	int encAverage = (leftEnc.read() + rightEnc.read())/2;
-	double toCM = encAverage / 16.4;
+	int encAverage = getEncAvg();
+	double toCM = encAverage / TICKS_CM;
 	return toCM;
 }
 
 double initDistanceTraveled(){
-	double toCM = initEncAverage / 16.4;
+	double toCM = initEncAverage / TICKS_CM;
 	return toCM;
 }

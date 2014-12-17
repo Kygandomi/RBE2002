@@ -1,5 +1,6 @@
 /* CONSTANT DEFINITIONS */
 
+/* PINS */
 #define lFrontI 12 //left front 
 #define lFrontO 13 
 #define lBackI 28 //left back 
@@ -14,21 +15,24 @@
 #define cliffSensor A5
 #define LEDPIN A10
 #define LEDNUM 6
-
 #define leftMPin 10
 #define rightMPin 11
 #define panPin 9 
 #define tiltPin 8
 #define gasPin 7
 
+/* SONAR COUNTER */
 #define LB 0
 #define LF 1
 #define MF 2 // middle front sensor
 #define RF 3
 #define RB 4
 
+/* MISCELLANEOUS TARGETS */
 #define MIN_POWER 20
 #define K 0.5
+#define TICKS_CM 16.4
+#define DEG_TICKS 3.36
 
 #define FAR_THRESH 30
 #define FRONT_THRESH 13
@@ -48,8 +52,6 @@ WS2812 LED(LEDNUM);
 typedef enum State {
 	FORWARD,
 	TURN,
-	REROUTE,
-	EXPLORE,
 	FLAME,
 	PUT_OUT_FLAME,
 	PAN_SENSOR,
@@ -58,7 +60,7 @@ typedef enum State {
 };
 State robotState;
 
-/* EXTRA */
+/* LIGHT */
 long ledTimer;
 bool ledPhase;
 typedef enum{
@@ -67,80 +69,102 @@ typedef enum{
 Color ledState;
 cRGB ledValues;
 
-void initialReadings();
-void checkCliff();
-void goTo(State s);
-void setLed(Color newState);
+bool checkCliff();
+void setLed(Color);
 void updateLed();
 
 /* PING */
 bool trackingLeft;
 bool isOpening = false;
 bool isFirstDetect = false;
-bool isFirstOpen = true;
 float initDist;
 float finalDist;
 float endDist;
 
-void checkStop();
-void checkInitDist();
+int getSideDist();
+bool checkStop();
 void checkForOpening();
-void checkSafety();
+void initialReadings();
 void setDirection();
 void getInitDist();
 void getFinalDist();
 void pingAll();
-void setCurrPing();
-void setPrevPing();
 
 /* IMU */
-float heading =0;
+float heading;
 int xDis;
 int yDis;
 
 void collectIMUData();
-void sov();
 void VectorSetup();
+void sumOfVectors();
 
 /* ENCODERS */
 float initEncAverage; 
 int encDiff;
 int encDetect;
 int turnTicks;
-int accumError = 0;
+int accumError;
 int initBackUpEncAverage;
 
 void zeroEncoders();
 void EncoderSetup();
+int getEncAvg();
 double distanceTraveled();
 double initDistanceTraveled();
 
 /* FLAME */
-bool isFlameFound = false;
+bool isFlameFound;
 bool flameDetectedOnce = true;
-bool flameExists = false;
+bool flameExists;
 int highestReading; 
 int highestEncAverage;
 unsigned long initPanTime;
 unsigned long initGasTime;
 int flameStatus[3] = {0, 180, 180}; 
 
-void checkFlameSensor();
-int limit(int value);
-void setTarget(int target);
-void putOutFlame();
+bool checkFlameSensor();
+int limit(int);
+void setTarget(int);
+bool putOutFlame();
 bool findFlame();
-void checkFlameFront();
 void setFlameServo();
-void checkStopFindFlame();
+bool checkStopFindFlame();
 
 /* SERVOS */
 void ServoSetup();
-void drive(int x, int y);
+void drive(int, int);
 
 /* NAVIGATION */
 void startTurnOpening();
 void startTurn();
-void completeTurn();
-void driveBackwards();
-void driveStraight();
+bool completeTurn();
+bool driveBackwards();
+bool driveStraight();
+
+/* STATE CHANGE */
+void goTo(State s){
+	if(robotState == FORWARD)
+		sumOfVectors();
+	robotState = s;
+	switch(s){
+		case FORWARD:
+			setFlameServo();
+			getInitDist();
+			zeroEncoders();
+			break;
+		case TURN:
+			zeroEncoders();
+			break;
+		case PUT_OUT_FLAME:
+			initGasTime = millis();
+			break;
+		case STOP:
+			setLed(GREEN);
+			break;
+		case PAN_SENSOR:
+			drive(0, 0);
+			initPanTime = millis();
+			break;
+	}
+}

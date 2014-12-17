@@ -18,137 +18,108 @@
 #include "Flame.h"
 #include "Servos.h"
 #include "Navigation.h"
-#include "Extra.h"
-
-long lcdTimer;
+#include "Light.h"
 
 void setup() {
+	//indicate program running
 	LED.setOutput(LEDPIN);
 	setLed(GREEN);
-	Serial.begin(9600);
+
+	//set up everything
 	IMUSetup();
 	PingSetup();
 	EncoderSetup();
 	ServoSetup();
+	VectorSetup();
 
+	//take some sensor readings, figure out which wall to follow
 	initialReadings();
 	setDirection();
 	setFlameServo();
 
-	VectorSetup();
+	//go!
 	setLed(PURPLE);
-	Serial.println("START");
 	goTo(FORWARD);
 }
 
 void loop() {
-	collectIMUData();
-	pingAll();
-	setCurrPing();
+	collectIMUData(); //always collect imu data
+	pingAll(); //always ping ultrasonic sensors
+	updateLed(); //make LED's flash
 
 	switch(robotState){
 		case FORWARD:
-			checkStop();
-			checkInitDist();
-			checkCliff();
-			//RESETER////////
-			if(trackingLeft){
-				if(cm[LB] < FAR_THRESH){
-					isOpening = false;
-					encDiff = 0;
-					isFirstDetect = false;
-				}
+			if(checkStop()){ //don't hit a wall!
+				startTurn();
+				goTo(TURN);
 			}
-			else{
-				if(cm[RB] < FAR_THRESH){
-					isOpening = false;
-					encDiff = 0;
-					isFirstDetect = false;
-				}
+			if(checkCliff()) //don't go over a cliff!
+				goTo(BACKUP);
+			
+			if(getSideDist() < FAR_THRESH){ //Reset false values that may be from noise
+				isOpening = false;
+				encDiff = 0;
+				isFirstDetect = false;
 			}
-			///////////////
-			if(!isOpening){
+			
+			if(!isOpening) //Check for new areas to explore
 				checkForOpening();
-			}
-			if(isOpening){
-				int currentEncAverage = (leftEnc.read() + rightEnc.read())/2;
-				if(trackingLeft){
-					if(currentEncAverage != initEncAverage && cm[LB] > FAR_THRESH){
-						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 300;
-						if(initDist > FAR_THRESH && isFirstDetect){
-							encDetect = 800;
-						}
-					}
+			
+			if(isOpening){ //New areas?
+				if(getEncAvg() != initEncAverage && getSideDist() > FAR_THRESH){
+					encDiff = getEncAvg() - initEncAverage;
+					encDetect = (initDist > FAR_THRESH && isFirstDetect)? 800 : 300;
 				}
-				else{
-					if(currentEncAverage != initEncAverage && cm[RB] > FAR_THRESH){
-						encDiff = currentEncAverage - initEncAverage;
-						encDetect = 300;
-						if(initDist > FAR_THRESH && isFirstDetect){
-							encDetect = 800;
-						}
-					}
-				}
-
 				if(encDiff > encDetect){
 					startTurnOpening();
+					goTo(TURN);
 				}
 			}
-			//checkSafety();
-			driveStraight();
-			checkFlameSensor();
+			
+			if(!driveStraight()){ //always drive straight
+				startTurn();
+				goTo(TURN);
+			}
+			if(checkFlameSensor()) //look for fire!
+				goTo(FORWARD);
 			break;
+
 		case BACKUP:
-			driveBackwards();
-			break;	
-		case TURN:
-			completeTurn();
-			break;
-		case REROUTE:
-			startTurn();
-			break;
-		case EXPLORE:
-			startTurnOpening();
-			break;
-		case FLAME:
-			if(findFlame()){
-				goTo(PUT_OUT_FLAME);
+			if(driveBackwards()){ //if done driving backwards, turn and continue
+				startTurn();
+				goTo(TURN);
 			}
 			break;
+
+		case TURN:
+			if(completeTurn()) //finish the turn
+				goTo(FORWARD);
+			break;
+
+		case FLAME:
+			if(findFlame()) //if fire, put it out!
+				goTo(PUT_OUT_FLAME);
+			break;
+
 		case PUT_OUT_FLAME:
-			putOutFlame();
+			if(putOutFlame()) //if it's out, finish
+				goTo(STOP);
 			break;
+
 		case STOP:
-			drive(0,0);
-			xDis += 30 * cos(ToRad(heading));
-			yDis += 30 * sin(ToRad(heading));
-			lcd.print("X: ");
-			lcd.print(xDis);
-			lcd.print("Y: ");
-			lcd.print(yDis);
-			lcd.setCursor(0,1);
-			lcd.print(heading);
-			while(1);
+			//print the candle's position
+			lcd.print("X: "); lcd.print(xDis);
+			lcd.print("Y: "); lcd.print(yDis);
+			while(1); //exit
 			break;
+
 		case PAN_SENSOR:
-			checkStopFindFlame();
-			break;		
-		default:
+			if(checkStopFindFlame()) //if there really is fire, locate it
+				goTo(FLAME);
+			else{ //else go back to previous activity
+				startTurn();
+				goTo(TURN);
+			}
 			break;
 	}
-
-	// if(millis() - lcdTimer > 1000){
-	// 	lcd.setCursor(0,0);
-	// 	lcd.print("X: ");
-	// 	lcd.print(xDis);
-	// 	lcd.print("Y: ");
-	// 	lcd.print(yDis);
-	// 	lcd.setCursor(0,1);
-	// 	lcd.print(heading);
-	// 	lcdTimer = millis();
-	// }
-
-	updateLed();
-	setPrevPing();
 }

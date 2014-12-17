@@ -1,14 +1,3 @@
-void I2C_Init();
-void Accel_Init();
-void Gyro_Init();
-void Read_Gyro();
-void Read_Accel();
-float Vector_Dot_Product(float vector1[3],float vector2[3]);
-void Vector_Cross_Product(float vectorOut[3], float v1[3],float v2[3]);
-void Vector_Scale(float vectorOut[3],float vectorIn[3], float scale2);
-void Vector_Add(float vectorOut[3],float vectorIn1[3], float vectorIn2[3]);
-void Matrix_Multiply(float a[3][3], float b[3][3],float mat[3][3]);
-
 /*
 
 MinIMU-9-Arduino-AHRS
@@ -38,6 +27,16 @@ You should have received a copy of the GNU Lesser General Public License along
 with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
 
 */
+void I2C_Init();
+void Accel_Init();
+void Gyro_Init();
+void Read_Gyro();
+void Read_Accel();
+float Vector_Dot_Product(float vector1[3],float vector2[3]);
+void Vector_Cross_Product(float vectorOut[3], float v1[3],float v2[3]);
+void Vector_Scale(float vectorOut[3],float vectorIn[3], float scale2);
+void Vector_Add(float vectorOut[3],float vectorIn1[3], float vectorIn2[3]);
+void Matrix_Multiply(float a[3][3], float b[3][3],float mat[3][3]);
 
 int SENSOR_SIGN[9] = {1,1,1,-1,-1,-1,1,1,1};
 

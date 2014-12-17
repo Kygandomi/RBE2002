@@ -1,8 +1,8 @@
 void ServoSetup(){
 	leftM.attach(leftMPin);
 	rightM.attach(rightMPin);
-	pan.attach(panPin);
-	tilt.attach(tiltPin);
+	pan.attach(panPin, 1000, 2000);
+	tilt.attach(tiltPin, 1000, 2000);
 	gas.attach(gasPin, 1000, 2000);
 }
 
@@ -25,10 +25,6 @@ void drive(int x, int y){
 	if(y>0 && y<MIN_POWER)
 		y = MIN_POWER;
 
-
-	int a = map(x, -100, 100, 1000, 2000);
-	int b = map(y, -100, 100, 2000, 1000);
-
-	leftM.writeMicroseconds(a);
-	rightM.writeMicroseconds(b);
+	leftM.writeMicroseconds(map(x, -100, 100, 1000, 2000));
+	rightM.writeMicroseconds(map(y, -100, 100, 2000, 1000));
 }
