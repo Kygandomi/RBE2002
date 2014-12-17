@@ -15,7 +15,7 @@ bool checkStop(){
 void checkForOpening(){
 	int measurement = getSideDist();
 	if(measurement > FAR_THRESH){
-		initEncAverage = (leftEnc.read() + rightEnc.read())/2;
+		initEncAverage = getEncAvg();
 		endDist = trackingLeft? prevLB : prevRB;
 		isOpening = true;
 	}
