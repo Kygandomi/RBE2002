@@ -42,6 +42,7 @@ void setup() {
 }
 
 void loop() {
+	collectIMUData();
 	pingAll();
 	setCurrPing();
 
@@ -102,7 +103,6 @@ void loop() {
 			driveBackwards();
 			break;	
 		case TURN:
-			collectIMUData();
 			completeTurn();
 			break;
 		case REROUTE:
@@ -121,8 +121,8 @@ void loop() {
 			break;
 		case STOP:
 			drive(0,0);
-			//xDis += 20 * cos(ToRad(heading));
-			//yDis += 20 * sin(ToRad(heading));
+			xDis += 30 * cos(ToRad(heading));
+			yDis += 30 * sin(ToRad(heading));
 			lcd.print("X: ");
 			lcd.print(xDis);
 			lcd.print("Y: ");
@@ -151,8 +151,4 @@ void loop() {
 
 	updateLed();
 	setPrevPing();
-	if(millis() - timer > 19)
-	{
-		timer = millis();
-	}
 }

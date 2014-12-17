@@ -9,7 +9,7 @@ void checkCliff(){
 
 void goTo(State s){
 	if(robotState == FORWARD)
-		sov();
+		sumOfVectors();
 	robotState = s;
 	switch(s){
 		case FORWARD:

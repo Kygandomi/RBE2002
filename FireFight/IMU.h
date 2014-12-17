@@ -25,12 +25,13 @@ void collectIMUData(){
 	{
 		counter++;
 		G_Dt = interval / 1000.0; // Real time of loop run. We use this on the DCM algorithm (gyro integration time)
-		//timer = millis();
+		timer = millis();
 
 		Read_Gyro(); // This read gyro data
-		//Read_Accel(); // Read I2C accelerometer
+		Read_Accel(); // Read I2C accelerometer
 
-		heading += gyro_z * G_Dt * 0.07;
+		if(robotState == TURN)
+			heading += gyro_z * G_Dt * 0.07;
 
 		//Serial.println(heading);
 	}
@@ -40,19 +41,10 @@ void VectorSetup(){
 	lcd.begin(16, 2);
 }
 
-void sov(){
-	//if(!blockSOV){
-		int linDiff = ((leftEnc.read()+rightEnc.read()) / 33);// - prevLinDis;
-		float currentAngDis = ToRad(heading); //initHeading - yaw;
+void sumOfVectors(){
+	int linDiff = ((leftEnc.read()+rightEnc.read()) / 33); // - prevLinDis;
+	float currentAngDis = ToRad(heading); //initHeading - yaw;
 
-		xDis += linDiff * cos(currentAngDis);
-		yDis += linDiff * sin(currentAngDis);
-
-		// Serial.print(cos(currentAngDis));
-		// Serial.print("    ");
-		// Serial.println(sin(currentAngDis));
-		//Serial.println(MAG_Heading);
-
-		//prevLinDis += linDiff;
-	//}
+	xDis += linDiff * cos(currentAngDis);
+	yDis += linDiff * sin(currentAngDis);
 }
