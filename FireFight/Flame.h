@@ -12,7 +12,7 @@ bool checkFlameSensor(){
 	return false;
 }
 
-int limit(int value){
+int limit(int value){ //limit servo values to the range 0-180
 	if(value > 180)
 		return 180;
 	else if(value < 0)
@@ -21,13 +21,13 @@ int limit(int value){
 		return value;
 }
 
-void setTarget(int target){
+void setTarget(int target){ //p control for the air actuator
 	int error = analogRead(A11) - target;
 	int value = limit(90 - error * 0.2);
 	gas.write(value);
 }
 
-bool putOutFlame(){
+bool putOutFlame(){ //put out the fire for 1 second
 	if(millis() - initGasTime < 1000)
 		setTarget(770);
 	else if(millis() - initGasTime < 2000)
@@ -37,7 +37,7 @@ bool putOutFlame(){
 	return false;
 }
 
-bool findFlame(){
+bool findFlame(){ //scan for the flame
 	const int minX = 30;
 	const int minY = 60;
 	const int maxX = 120;
@@ -82,7 +82,7 @@ bool findFlame(){
 	}
 }
 
-void setFlameServo(){
+void setFlameServo(){ //switch direction based on which wall is being followed
 	tilt.write(90);
 	pan.write(trackingLeft? 140 : 30);
 }
