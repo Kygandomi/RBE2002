@@ -25,7 +25,7 @@ int limit(int value){
 		return value;
 }
 
-void setTarget(int target){ /
+void setTarget(int target){
 	//p control for the air actuator
 	int error = analogRead(A11) - target;
 	int value = limit(90 - error * 0.2);

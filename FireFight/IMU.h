@@ -8,7 +8,6 @@ void collectIMUData(){
 		timer = millis();
 
 		Read_Gyro(); // This read gyro data
-		Read_Accel(); // Read I2C accelerometer
 
 		if(robotState == TURN) //only count gyro data when turning (very little drift!)
 			heading += gyro_z * G_Dt * 0.07;
