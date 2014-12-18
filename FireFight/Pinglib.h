@@ -10,7 +10,7 @@ uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 float prevLB = 6;
 float prevRB = 6;
 
-NewPing sonar[SONAR_NUM] = {     // Sensor object array.
+NewPing sonar[SONAR_NUM] = { // Sensor object array.
 	NewPing(lBackI, lBackO, MAX_DISTANCE),
 	NewPing(lFrontI, lFrontO, MAX_DISTANCE),
 	NewPing(mFrontI, mFrontO, MAX_DISTANCE), //added to accommodate the 5th sensor (front middle)
@@ -19,7 +19,7 @@ NewPing sonar[SONAR_NUM] = {     // Sensor object array.
 	
 };
 
-void echoCheck() { // If ping received, set the sensor distance to array.
+void echoCheck(){ // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer())
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
 }

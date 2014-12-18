@@ -347,19 +347,6 @@ void Vector_Add(float vectorOut[3],float vectorIn1[3], float vectorIn2[3]){
 		vectorOut[c]=vectorIn1[c]+vectorIn2[c];
 }
 
-void printdata(void){    
-	Serial.print("!");
-
-	Serial.print("ANG:");
-	Serial.print(ToDeg(roll));
-	Serial.print(",");
-	Serial.print(ToDeg(pitch));
-	Serial.print(",");
-	Serial.print(ToDeg(yaw));
-
-	Serial.println();
-}
-
 long convert_to_dec(float x){
 	return x * 10000000;
 }
