@@ -1,3 +1,4 @@
+//Pinglib.h
 /* This example code was taken from the NewPing library examples */
 
 #define SONAR_NUM     5 // Number of sensors.

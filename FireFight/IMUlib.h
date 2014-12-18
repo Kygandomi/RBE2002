@@ -1,5 +1,5 @@
+//IMUlib.h
 /*
-
 MinIMU-9-Arduino-AHRS
 Pololu MinIMU-9 + Arduino AHRS (Attitude and Heading Reference System)
 
@@ -25,7 +25,6 @@ more details.
 
 You should have received a copy of the GNU Lesser General Public License along
 with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
-
 */
 void I2C_Init();
 void Accel_Init();

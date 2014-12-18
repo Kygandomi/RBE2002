@@ -1,3 +1,4 @@
+//Ping.h
 /* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
 
 int getSideDist(){
@@ -19,6 +20,11 @@ void checkForOpening(){
 		initEncAverage = getEncAvg();
 		endDist = trackingLeft? prevLB : prevRB;
 		isOpening = true;
+	}
+	else{ //nothing to explore
+		isOpening = false;
+		encDiff = 0;
+		isFirstDetect = false;
 	}
 }
 

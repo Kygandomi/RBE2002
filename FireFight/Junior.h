@@ -1,3 +1,4 @@
+//Junior.h
 /* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
 
 /* PINS */
@@ -24,7 +25,7 @@
 /* SONAR COUNTER */
 #define LB 0
 #define LF 1
-#define MF 2 // middle front sensor
+#define MF 2
 #define RF 3
 #define RB 4
 

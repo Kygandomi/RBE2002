@@ -1,3 +1,4 @@
+//Servos.h
 /* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
 
 void ServoSetup(){
@@ -8,7 +9,10 @@ void ServoSetup(){
 	gas.attach(gasPin, 1000, 2000);
 }
 
-void drive(int x, int y){ //this enables us to tell the servos to drive in an intuitive way - as a percentage rather than degree from 90 - also mapped so positive is forward!
+//this enables us to tell the motors to drive in an intuitive way
+//as a percentage rather than degree from 90
+//also mapped so positive is forward for both motors!
+void drive(int x, int y){
 	if(x>100)
 		x = 100;
 	else if(x<-100)

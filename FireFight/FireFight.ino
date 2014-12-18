@@ -1,5 +1,6 @@
 // FireFight.ino
 /* Written by Katie Gandomi, Alexander O'Brien, Yu-sen Wu, Shao Zhou */
+
 #include <Servo.h>
 #include <Encoder.h>
 #include <NewPing.h>
@@ -56,12 +57,6 @@ void loop() {
 			}
 			if(checkCliff()) //don't go over a cliff!
 				goTo(BACKUP);
-			
-			if(getSideDist() < FAR_THRESH){ //nothing to explore
-				isOpening = false;
-				encDiff = 0;
-				isFirstDetect = false;
-			}
 			
 			if(!isOpening) //Check for new areas to explore
 				checkForOpening();
